@@ -20,6 +20,6 @@ import { configure } from 'mobx';
 })
 export class AppModule {
   constructor() {
-    configure({ enforceActions: 'strict' });
+    configure({ enforceActions: 'always' });
   }
 }

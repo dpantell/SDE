@@ -2,15 +2,18 @@
 
   <div *mobxAutorun>
 
-    <div>
-      current phase: {{phaseStore.name}}
+    <div [ngClass]="phaseStore.styleClass">
+      <div>
+        current phase: {{phaseStore.name}}
+      </div>
+
+      <br>
+
+      <button (click)="phaseStore.next()">
+        go to next phase
+      </button>
     </div>
 
-    <br>
-
-    <button (click)="phaseStore.next()">
-      go to next phase
-    </button>
 
   </div>
 

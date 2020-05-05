@@ -1,12 +1,20 @@
 import { observable, action, computed } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { Phase } from 'src/models/phase.interface';
+import { get } from 'lodash';
+import { GetPhasesService } from 'src/services/get-phases.service';
+import { PhaseStyle } from 'src/models/phase-style.enum';
 
 @Injectable({ providedIn: 'root' })
 export class PhaseStore {
 
     @observable private phaseIndex: number;
     @observable private phases: Phase[];
+
+    constructor(
+        private getPhasesService: GetPhasesService
+    ) {
+    }
 
     @computed get currentPhase(): Phase {
 
@@ -18,10 +26,30 @@ export class PhaseStore {
         return this.currentPhase.name;
     }
 
+    @computed get style(): PhaseStyle {
+
+        return this.currentPhase.style;
+    }
+
+    @computed get styleClass(): string {
+
+        switch (this.style) {
+
+            case PhaseStyle.Daylight:
+                return 'day';
+
+            case PhaseStyle.StarryNight:
+                return 'night';
+
+            default:
+                return '';
+        }
+    }
+
     @action resetState(): void {
 
         this.phaseIndex = 0;
-        this.phases = this.getPhases();
+        this.phases = this.getPhasesService.getPhases();
     }
 
     @action next(): void {
@@ -31,25 +59,5 @@ export class PhaseStore {
         this.phaseIndex = (this.phaseIndex + 1) % this.phases.length;
 
         this.currentPhase.onBegin();
-    }
-
-    private getPhases(): Phase[] {
-
-        const day: Phase = {
-            name: 'Day',
-            onBegin: () => { console.log(`${day.name} onBegin`); },
-            onEnd: () => { console.log(`${day.name} onEnd`); }
-        };
-
-        const night: Phase = {
-            name: 'Night',
-            onBegin: () => { console.log(`${night.name} onBegin`); },
-            onEnd: () => { console.log(`${night.name} onEnd`); }
-        };
-
-        return [
-            day,
-            night
-        ];
     }
 }
