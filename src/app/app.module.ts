@@ -4,6 +4,7 @@ import { MobxAngularModule } from 'mobx-angular';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { configure } from 'mobx';
 
 @NgModule({
   declarations: [
@@ -17,4 +18,8 @@ import { AppComponent } from './app.component';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor() {
+    configure({ enforceActions: 'strict' });
+  }
+}
