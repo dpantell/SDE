@@ -1,4 +1,6 @@
 export enum PhaseStyle {
-    DayLight,
-    StarryNight
+    Daylight,
+    StarryNight,
+    Sunset,
+    Sunrise
 }

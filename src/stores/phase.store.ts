@@ -1,6 +1,6 @@
 import { observable, action, computed } from 'mobx-angular';
 import { Injectable } from '@angular/core';
-import { Phase } from 'src/models/phase.interface';
+import { Phase, PhaseAction } from 'src/models/phase.interface';
 import { get } from 'lodash';
 import { GetPhasesService } from 'src/services/get-phases.service';
 import { PhaseStyle } from 'src/models/phase-style.enum';
@@ -54,10 +54,15 @@ export class PhaseStore {
 
     @action next(): void {
 
-        this.currentPhase.onEnd();
+        this.runActions(this.currentPhase.endActions);
 
         this.phaseIndex = (this.phaseIndex + 1) % this.phases.length;
 
-        this.currentPhase.onBegin();
+        this.runActions(this.currentPhase.beginActions);
+    }
+
+    private runActions(actions: PhaseAction[]): void {
+
+        //
     }
 }
