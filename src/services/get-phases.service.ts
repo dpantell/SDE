@@ -44,7 +44,7 @@ export class GetPhasesService {
             transitions: []
         };
 
-        const night = {
+        const night: Phase = {
             name: 'Night',
             style: PhaseStyle.StarryNight,
             category: PhaseCategory.NIGHT,
@@ -62,6 +62,41 @@ export class GetPhasesService {
             ],
             transitions: []
         };
+
+        night.transitions = [
+            {
+                conditions: [],
+                target: 'Chat'
+            }
+        ];
+
+        chat.transitions = [
+            {
+                conditions: [],
+                target: 'Nomination'
+            }
+        ];
+
+        nomination.transitions = [
+            {
+                conditions: [],
+                target: 'Stand'
+            }
+        ];
+
+        stand.transitions = [
+            {
+                conditions: [],
+                target: 'Vote'
+            }
+        ];
+
+        vote.transitions = [
+            {
+                conditions: [],
+                target: 'Night'
+            }
+        ];
 
         return [
             chat,

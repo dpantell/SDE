@@ -1,34 +1,34 @@
 import { observable, action, computed } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { Phase, PhaseAction } from 'src/models/phase.interface';
-import { get } from 'lodash';
+import { get, filter, find, every, first } from 'lodash';
 import { GetPhasesService } from 'src/services/get-phases.service';
 import { PhaseStyle } from 'src/models/phase-style.enum';
+import { Transition } from 'src/models/transition.interface';
+import { TransitionService } from 'src/services/transition.service';
+import { ActionService } from 'src/services/action.service';
 
 @Injectable({ providedIn: 'root' })
 export class PhaseStore {
 
-    @observable private phaseIndex: number;
     @observable private phases: Phase[];
+    @observable private currentPhase: Phase;
 
     constructor(
-        private getPhasesService: GetPhasesService
+        private getPhasesService: GetPhasesService,
+        private transitionService: TransitionService,
+        private actionService: ActionService
     ) {
-    }
-
-    @computed get currentPhase(): Phase {
-
-        return this.phases[this.phaseIndex];
     }
 
     @computed get name(): string {
 
-        return this.currentPhase.name;
+        return this.currentPhase?.name;
     }
 
     @computed get style(): PhaseStyle {
 
-        return this.currentPhase.style;
+        return this.currentPhase?.style;
     }
 
     @computed get styleClass(): string {
@@ -48,21 +48,36 @@ export class PhaseStore {
 
     @action resetState(): void {
 
-        this.phaseIndex = 0;
         this.phases = this.getPhasesService.getPhases();
+
+        this.currentPhase = first(this.phases);
     }
 
     @action next(): void {
 
-        this.runActions(this.currentPhase.endActions);
+        const transition = this.getAvailableTransition(this.currentPhase);
 
-        this.phaseIndex = (this.phaseIndex + 1) % this.phases.length;
+        if (transition) {
 
-        this.runActions(this.currentPhase.beginActions);
+            this.actionService.executePhaseActions(this.currentPhase.endActions);
+
+            this.currentPhase = find(this.phases, phase => phase.name === transition.target);
+
+            this.actionService.executePhaseActions(this.currentPhase.beginActions);
+        }
     }
 
-    private runActions(actions: PhaseAction[]): void {
+    private getAvailableTransition(phase: Phase): Transition {
 
-        //
+        const availableTransition = find(phase.transitions, transition => this.isTransitionReady(transition));
+
+        return availableTransition;
+    }
+
+    private isTransitionReady(transition: Transition): boolean {
+
+        const areAllConditionsMet: boolean = every(transition.conditions, condition => this.transitionService.isConditionMet(condition));
+
+        return areAllConditionsMet;
     }
 }

@@ -1,14 +1,14 @@
 import { Phase } from './phase.interface';
 import { GameState } from './game-State.enum';
-import { Operator } from './operator.enum';
+import { TransitionOperator } from './operator.enum';
 
 export interface TransitionCondition {
     state: GameState;
     amount?: number;
-    operator?: Operator;
+    operator?: TransitionOperator;
 }
 
 export interface Transition {
-    target: Phase;
+    target: string;
     conditions: TransitionCondition[];
 }
