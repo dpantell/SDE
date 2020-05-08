@@ -33,6 +33,7 @@ export interface WinTarget {
 // state (this amount/condition)
 
 export interface Descriptor {
+    icon: string;
     name: string;
     description: string;
 }
@@ -64,12 +65,6 @@ export const ALL_ALIVE: WinStateCondition = {
     equality: NONE,
     state: WinState.DEAD
 };
-
-// Lawful | Neutral | Chaotic
-// Good   | Neutral | Evil
-// Town | Mafia | Neutral
-// Invest | Killing | Support | Protective | Deception | Benign | Chaos | (Evil)
-// Win condition for: Mafia
 
 export const NO_DESCRIPTION: Descriptor = {
     icon: '',
