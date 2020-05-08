@@ -1,4 +1,5 @@
-import { PhaseVerb, PhaseQuantifier } from './../models/phase.interface';
+import { Quantifier } from './../models/quantifier.enum';
+import { PhaseVerb } from './../models/phase.interface';
 import { Injectable } from '@angular/core';
 import { Phase, PhaseCategory, PhaseAction } from 'src/models/phase.interface';
 import { PhaseStyle } from 'src/models/phase-style.enum';
@@ -51,13 +52,13 @@ export class GetPhasesService {
             beginActions: [
                 {
                     verb: PhaseVerb.RESOLVE_QUEUED_ACTIONS,
-                    quantifier: PhaseQuantifier.ALL
+                    quantifier: Quantifier.ALL
                 }
             ],
             endActions: [
                 {
                     verb: PhaseVerb.RESOLVE_QUEUED_ACTIONS,
-                    quantifier: PhaseQuantifier.ALL
+                    quantifier: Quantifier.ALL
                 }
             ],
             transitions: []
