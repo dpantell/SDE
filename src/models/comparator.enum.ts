@@ -1,4 +1,4 @@
-export enum TransitionOperator {
+export enum Comparator {
     EQ,
     NEQ,
     LT,

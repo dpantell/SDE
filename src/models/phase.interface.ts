@@ -1,22 +1,13 @@
 import { PhaseStyle } from './phase-style.enum';
 import { Transition } from './transition.interface';
+import { Alignment } from './alignment.enum';
+import { Quantifier } from './quantifier.enum';
 
 export enum PhaseCategory {
     DAY,
     NIGHT,
     SUNSET,
     SUNRISE
-}
-
-export enum Alignment {
-    GOOD,
-    NEUTRAL,
-    EVIL
-}
-
-export enum PhaseNoun {
-    ALL,
-    ACCUSED
 }
 
 export enum PhaseVerb {
@@ -29,8 +20,8 @@ export enum PhaseVerb {
 
 export interface PhaseAction {
     verb: PhaseVerb;
-    noun: PhaseNoun;
     alignment?: Alignment;
+    quantifier: Quantifier;
 }
 
 export interface Phase {
