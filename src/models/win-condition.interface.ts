@@ -25,13 +25,6 @@ export interface WinTarget {
     role?: RoleType;
 }
 
-// Game state assertion
-// This game object (or collection of objects) is in some given state
-
-// target (game object)
-// equality (is, is not, is greater than)
-// state (this amount/condition)
-
 export interface Descriptor {
     icon: string;
     name: string;
