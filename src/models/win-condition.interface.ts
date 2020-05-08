@@ -60,6 +60,11 @@ export const ALL_DEAD: WinStateCondition = {
     state: WinState.ALIVE
 };
 
+export const ALL_ALIVE: WinStateCondition = {
+    equality: NONE,
+    state: WinState.DEAD
+};
+
 // Lawful | Neutral | Chaotic
 // Good   | Neutral | Evil
 // Town | Mafia | Neutral
@@ -67,6 +72,7 @@ export const ALL_DEAD: WinStateCondition = {
 // Win condition for: Mafia
 
 export const NO_DESCRIPTION: Descriptor = {
+    icon: '',
     name: '',
     description: '',
 };
@@ -116,6 +122,36 @@ export const ALL_NEUTRAL_KILLING_DEAD: WinCondition = {
     condition: ALL_DEAD
 };
 
+export const ALL_TARGETS_DEAD: WinCondition = {
+    ...NO_DESCRIPTION,
+    target: {
+        quantifier: Quantifier.TARGETS,
+    },
+    condition: ALL_DEAD
+};
+
+export const NO_TARGETS_DEAD: WinCondition = {
+    ...NO_DESCRIPTION,
+    target: {
+        quantifier: Quantifier.TARGETS,
+    },
+    condition: ALL_ALIVE
+};
+
+export const ONE_TARGET_DEAD: WinCondition = {
+    ...NO_DESCRIPTION,
+    target: {
+        quantifier: Quantifier.TARGETS,
+    },
+    condition: {
+        equality: {
+            comparator: Comparator.GTE,
+            amount: 1
+        },
+        state: WinState.ALIVE
+    }
+};
+
 export const EVIL_WIN_CONDITION_COLLECTION: WinCollection = {
     operator: LogicalOperator.AND,
     conditions: [
@@ -147,8 +183,9 @@ export const SERIAL_KILLER_COLLECTION: WinCollection = {
     ]
 };
 
-// Win condition for: Executioner
-{
-    // target dead
-}
-
+export const EXECUTIONER_COLLECTION: WinCollection = {
+    operator: LogicalOperator.AND,
+    conditions: [
+        ONE_TARGET_DEAD
+    ]
+};
