@@ -1,7 +1,7 @@
 import { observable, action, computed } from 'mobx-angular';
 import { Injectable } from '@angular/core';
-import { Phase, PhaseAction } from 'src/models/phase.interface';
-import { get, filter, find, every, first } from 'lodash';
+import { Phase } from 'src/models/phase.interface';
+import { find, every, first } from 'lodash';
 import { GetPhasesService } from 'src/services/get-phases.service';
 import { PhaseStyle } from 'src/models/phase-style.enum';
 import { Transition } from 'src/models/transition.interface';

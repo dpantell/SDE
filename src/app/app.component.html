@@ -14,7 +14,39 @@
       </button>
     </div>
 
+    <div>
 
+      Roles
+
+      <div *ngFor="let role of roleStore.roles">
+
+        <div>
+          {{role.name}}
+        </div>
+
+        <div *ngFor="let phaseAction of role.actionMap">
+
+          <div *ngIf="true">
+
+            <!-- is current phase equal to the phaseAction phase -->
+
+            <div *ngFor="let action of phaseAction.actions">
+
+              <button (click)="stackStore.addActionToStack(role, action)">
+
+                Do {{action.name}}
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
   </div>
 
 </router-outlet>

@@ -1,5 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { PhaseStore } from 'src/stores/phase.store';
+import { RoleStore } from 'src/stores/role.store';
+import { StackStore } from 'src/stores/stack.store';
 
 @Component({
   selector: 'app-root',
@@ -10,11 +12,17 @@ import { PhaseStore } from 'src/stores/phase.store';
 export class AppComponent implements OnInit {
 
   constructor(
-    public phaseStore: PhaseStore
+    public stackStore: StackStore,
+    public phaseStore: PhaseStore,
+    public roleStore: RoleStore
   ) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+
+    this.stackStore.resetState();
     this.phaseStore.resetState();
+    this.roleStore.resetState();
   }
+
 }

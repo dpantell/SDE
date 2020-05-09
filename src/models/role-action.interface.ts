@@ -51,35 +51,37 @@ export interface RoleAction {
     requestedMutation?: ActionMutation;
 }
 
-export const NO_DESCRIPTION: Descriptor = {
-    icon: '',
-    name: '',
-    description: '',
-};
-
 export const QUEUED_KILL: RoleAction = {
-    ...NO_DESCRIPTION,
+    icon: '',
+    name: 'Queued Kill',
+    description: '',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.LOW,
     requestedMutation: ActionMutation.KILL
 };
 
 export const IMMEDIATE_KILL: RoleAction = {
-    ...NO_DESCRIPTION,
+    icon: '',
+    name: 'Immediate Kill',
+    description: '',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.LOW,
     requestedMutation: ActionMutation.KILL
 };
 
 export const QUERY_ALIGNMENT: RoleAction = {
-    ...NO_DESCRIPTION,
+    icon: '',
+    name: 'Query Alignment',
+    description: '',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.LOW,
     requestedQuery: ActionQuery.ALIGNMENT
 };
 
 export const QUERY_ROLE: RoleAction = {
-    ...NO_DESCRIPTION,
+    icon: '',
+    name: 'Query Role',
+    description: '',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.LOW,
     requestedQuery: ActionQuery.ROLE
