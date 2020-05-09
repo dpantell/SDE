@@ -22,7 +22,6 @@ export interface WinCondition {
     description: string;
     target: ActorTarget;
     condition: WinStateCondition;
-    collection?: WinCollection;
 }
 
 export interface WinStateCondition {

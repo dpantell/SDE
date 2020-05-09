@@ -5,6 +5,5 @@ export enum RoleType {
     Protective,
     Deception,
     Benign,
-    Chaos,
-    Evil
+    Chaos
 }

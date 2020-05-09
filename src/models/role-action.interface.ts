@@ -26,8 +26,16 @@ export enum ActionMutation {
     CREATE_PRIVATE_CHAT
 }
 
-export interface RoleActionCollection {
-    enabledPhases: PhaseCategory[];
+export enum PriorityLevel {
+    LOWEST,
+    LOW,
+    MEDIUM,
+    HIGH,
+    HIGHEST
+}
+
+export interface PhaseActionMap {
+    phases: PhaseCategory[];
     actions: RoleAction[];
 }
 
@@ -37,36 +45,42 @@ export interface RoleAction {
     description: string;
 
     type: RoleActionType;
+    priorty: PriorityLevel;
+
     requestedQuery?: ActionQuery;
     requestedMutation?: ActionMutation;
 }
 
-const NO_DESCRIPTION: Descriptor = {
+export const NO_DESCRIPTION: Descriptor = {
     icon: '',
     name: '',
     description: '',
 };
 
-const QUEUED_KILL: RoleAction = {
+export const QUEUED_KILL: RoleAction = {
     ...NO_DESCRIPTION,
     type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.LOW,
     requestedMutation: ActionMutation.KILL
 };
 
-const IMMEDIATE_KILL: RoleAction = {
+export const IMMEDIATE_KILL: RoleAction = {
     ...NO_DESCRIPTION,
     type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.LOW,
     requestedMutation: ActionMutation.KILL
 };
 
-const QUERY_ALIGNMENT: RoleAction = {
+export const QUERY_ALIGNMENT: RoleAction = {
     ...NO_DESCRIPTION,
     type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.LOW,
     requestedQuery: ActionQuery.ALIGNMENT
 };
 
-const QUERY_ROLE: RoleAction = {
+export const QUERY_ROLE: RoleAction = {
     ...NO_DESCRIPTION,
     type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.LOW,
     requestedQuery: ActionQuery.ROLE
 };
