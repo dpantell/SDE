@@ -36,7 +36,9 @@ export class AppComponent implements OnInit {
     this.userStore.resetState();
     this.gameStateStore.resetState();
 
-    this.me = this.userStore.users[0];
+    const me = this.userStore.aliveUsers[0];
+
+    this.me = me;
   }
 
   public isActionEnabledDuringPhase(action: PhaseActionMap): boolean {

@@ -1,36 +1,33 @@
 import { PhaseStore } from 'src/stores/phase.store';
 import { GameState } from 'src/models/game-state.interface';
-import { observable, action } from 'mobx-angular';
+import { observable, action, computed } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { UserStore } from './user.store';
-import { User } from 'src/models/user.interface';
 
 @Injectable({ providedIn: 'root' })
 export class GameStateStore {
 
-    @observable public gameState: GameState;
+    @observable private _gameState: GameState;
 
     constructor(
         private phaseStore: PhaseStore,
         private userStore: UserStore
     ) { }
 
-    @action resetState(): void {
+    @computed get gameState(): GameState {
 
-        this.gameState = this.getDefaultGameState();
+        return this._gameState;
     }
 
-    @action markUserAsDead(deadUser: User): void {
+    @action resetState(): void {
 
-        this.gameState.aliveUsers.filter(user => user.id !== deadUser.id);
-
-        this.gameState.deadUsers.push(deadUser);
+        this._gameState = this.getDefaultGameState();
     }
 
     private getDefaultGameState(): GameState {
         return {
-            aliveUsers: this.userStore.users,
-            deadUsers: [],
+            aliveUsers: this.userStore.aliveUsers,
+            deadUsers: this.userStore.deadUsers,
             currentPhase: this.phaseStore.currentPhase
         };
     }

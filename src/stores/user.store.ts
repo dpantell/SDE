@@ -1,5 +1,5 @@
 import { RoleStore } from 'src/stores/role.store';
-import { observable, action } from 'mobx-angular';
+import { observable, action, computed } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { Role } from 'src/models/role.interface';
 import { User } from 'src/models/user.interface';
@@ -13,11 +13,31 @@ export class UserStore {
     ) {
     }
 
-    @observable public users: User[];
+    @observable private _aliveUsers: User[];
+
+    @observable private _deadUsers: User[];
+
+    @computed get aliveUsers(): User[] {
+
+        return this._aliveUsers;
+    }
+
+    @computed get deadUsers(): User[] {
+
+        return this._deadUsers;
+    }
 
     @action resetState(): void {
 
-        this.users = this.getMockUsers();
+        this._aliveUsers = this.getMockUsers();
+        this._deadUsers = [];
+    }
+
+    @action markUserAsDead(deadUser: User): void {
+
+        this._aliveUsers.splice(this._aliveUsers.findIndex(user => user.id === deadUser.id), 1);
+
+        this._deadUsers.push(deadUser);
     }
 
     private getMockUsers(): User[] {
@@ -27,7 +47,7 @@ export class UserStore {
         const userNames: string[] = this.generateUserNames(numberOfMockUsers);
 
         const users: User[] = [
-            this.generateMockUser(userNames[0], this.roleStore.roles[2]), // Me
+            this.generateMockUser(userNames[0], this.roleStore.roles[0]), // Me
             this.generateMockUser(userNames[1]),
             this.generateMockUser(userNames[2]),
             this.generateMockUser(userNames[3]),

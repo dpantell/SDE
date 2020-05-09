@@ -1,3 +1,4 @@
+import { UserStore } from './../stores/user.store';
 import { GameStateStore } from './../stores/gamestate.store';
 import { Injectable } from '@angular/core';
 import { RoleAction, ActionMutation, ActionQuery } from 'src/models/role-action.interface';
@@ -8,7 +9,7 @@ import { StackActionItem } from 'src/models/stack-action-item.interface';
 @Injectable({ providedIn: 'root' })
 export class StackService {
 
-    // constructor(private gameStateStore: GameStateStore) { }
+    constructor(private userStore: UserStore) { }
 
     public isTargetUserAllowableForAction(requestor: User, target: User, action: RoleAction): boolean {
 
@@ -73,7 +74,7 @@ export class StackService {
         // TODO: Do we want another validity check on the action?
         switch (stackItem.action.requestedMutation) {
             case ActionMutation.KILL: {
-                // this.gameStateStore.markUserAsDead(stackItem.target);
+                this.userStore.markUserAsDead(stackItem.target);
                 break;
             }
 
