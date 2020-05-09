@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
     this.phaseStore.resetState();
     this.roleStore.resetState();
     this.userStore.resetState();
+    this.gameStateStore.resetState();
 
     this.me = this.userStore.users[0];
   }

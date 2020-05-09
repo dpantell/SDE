@@ -1,3 +1,4 @@
+import { GameStateStore } from './../stores/gamestate.store';
 import { Injectable } from '@angular/core';
 import { RoleAction, ActionMutation, ActionQuery } from 'src/models/role-action.interface';
 import { User } from 'src/models/user.interface';
@@ -6,6 +7,8 @@ import { StackActionItem } from 'src/models/stack-action-item.interface';
 
 @Injectable({ providedIn: 'root' })
 export class StackService {
+
+    // constructor(private gameStateStore: GameStateStore) { }
 
     public isTargetUserAllowableForAction(requestor: User, target: User, action: RoleAction): boolean {
 
@@ -47,6 +50,7 @@ export class StackService {
                 break;
             }
             case ActionQuery.ROLE: {
+                // TODO: Fuzzy query vs Accurate query (return role group vs exact role)
                 queryResults = stackItem.target.role.name;
                 break;
             }
@@ -67,6 +71,12 @@ export class StackService {
 
     public executeActionMutation(stackItem: StackActionItem): void {
         // TODO: Do we want another validity check on the action?
+        switch (stackItem.action.requestedMutation) {
+            case ActionMutation.KILL: {
+                // this.gameStateStore.markUserAsDead(stackItem.target);
+                break;
+            }
 
+        }
     }
 }

@@ -1,3 +1,4 @@
+import { QUERY_ROLE } from './../models/role-action.interface';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { PhaseCategory } from 'src/models/phase.interface';
@@ -21,7 +22,8 @@ export class RoleStore {
 
         const roles: Role[] = [
             this.getMafiosoRole(),
-            this.getSheriffRole()
+            this.getSheriffRole(),
+            this.getInvestigatorRole()
         ];
 
         return roles;
@@ -68,6 +70,32 @@ export class RoleStore {
                     ],
                     actions: [
                         QUERY_ALIGNMENT
+                    ]
+                },
+            ],
+            winConditions: GOOD_WIN_CONDITION_COLLECTION,
+            queryImmunity: [],
+            mutationImmunity: [],
+            attack: CombatPower.NONE,
+            defense: CombatPower.NONE,
+        };
+    }
+
+    private getInvestigatorRole(): Role {
+
+        return {
+            icon: '',
+            name: 'Investigator',
+            description: '',
+            roleType: RoleType.Invest,
+            alignment: Alignment.GOOD,
+            actionMap: [
+                {
+                    phases: [
+                        PhaseCategory.NIGHT
+                    ],
+                    actions: [
+                        QUERY_ROLE
                     ]
                 },
             ],

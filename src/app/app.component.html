@@ -19,7 +19,7 @@
       Users: (You are <strong>{{me.name}}</strong> and your role is <strong>{{me.role.name}}</strong>)
       <br />
       <br />
-      <div *ngFor="let target of userStore.users; index as i">
+      <div *ngFor="let target of gameStateStore?.gameState?.aliveUsers; index as i">
 
         <div style="height: 30px;">
 
@@ -53,6 +53,13 @@
 
       </div>
 
+    </div>
+
+    <div style="padding-top: 20px;">
+      Dead Users:
+      <div *ngFor="let dead of gameStateStore?.gameState?.deadUsers; index as i">
+        <span *ngIf="dead">{{dead.name}}</span>
+      </div>
     </div>
     <br />
     <span>Stack:</span>

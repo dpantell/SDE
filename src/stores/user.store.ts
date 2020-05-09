@@ -27,7 +27,7 @@ export class UserStore {
         const userNames: string[] = this.generateUserNames(numberOfMockUsers);
 
         const users: User[] = [
-            this.generateMockUser(userNames[0], this.roleStore.roles[1]),
+            this.generateMockUser(userNames[0], this.roleStore.roles[2]), // Me
             this.generateMockUser(userNames[1]),
             this.generateMockUser(userNames[2]),
             this.generateMockUser(userNames[3]),
