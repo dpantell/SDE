@@ -55,7 +55,7 @@ export class PhaseStore {
 
         this.phases = this.getPhasesService.getPhases();
 
-        this._currentPhase = this.phases.find(phase => phase.name === 'Chat');
+        this._currentPhase = first(this.phases);
     }
 
     @action next(): void {

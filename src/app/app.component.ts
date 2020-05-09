@@ -20,8 +20,6 @@ export class AppComponent implements OnInit {
   @ViewChild('cd', { static: false }) private countdown: CountdownComponent;
 
   public me: User;
-  public countdownConfig: CountdownConfig;
-
 
   constructor(
     public stackStore: StackStore,
@@ -44,10 +42,6 @@ export class AppComponent implements OnInit {
     const me = this.userStore.aliveUsers[0];
 
     this.me = me;
-    this.countdownConfig = {
-      leftTime: 30
-    };
-
     this.countdown.begin();
   }
 
