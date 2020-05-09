@@ -22,59 +22,93 @@ export class UserStore {
 
     private getMockUsers(): User[] {
 
+        const numberOfMockUsers: number = 10;
+
+        const userNames: string[] = this.generateUserNames(numberOfMockUsers);
+
         const users: User[] = [
-            this.generateMockUser(this.roleStore.roles[1]),
-            this.generateMockUser(),
-            this.generateMockUser(),
-            this.generateMockUser(),
-            this.generateMockUser(this.roleStore.roles[0]),
-            this.generateMockUser(),
-            this.generateMockUser(),
-            this.generateMockUser(),
-            this.generateMockUser(this.roleStore.roles[0]),
-            this.generateMockUser(),
+            this.generateMockUser(userNames[0], this.roleStore.roles[1]),
+            this.generateMockUser(userNames[1]),
+            this.generateMockUser(userNames[2]),
+            this.generateMockUser(userNames[3]),
+            this.generateMockUser(userNames[4], this.roleStore.roles[0]),
+            this.generateMockUser(userNames[5]),
+            this.generateMockUser(userNames[6]),
+            this.generateMockUser(userNames[7]),
+            this.generateMockUser(userNames[8], this.roleStore.roles[0]),
+            this.generateMockUser(userNames[9]),
         ];
 
         return users;
     }
 
-    private generateMockUser(role?: Role): User {
+    private generateMockUser(userName?: string, role?: Role): User {
         return {
             id: uuidv4(),
-            name: this.generateUserName(),
+            name: userName || this.generateUserNames(1)[0],
             role: role || this.roleStore.roles[1]
         };
     }
 
-    public generateUserName(): string {
+    public generateUserNames(numberOfNames: number): string[] {
 
-        const titles: string[] = ['THE', 'Mr.', 'Mrs.', 'Duke', 'Dr.', 'Lord', 'Lady',
+        // TODO: All rarities to all levels
+        let titles: string[] = ['THE', 'Dr.', 'Lord', 'Lady',
             'Master', 'President', 'Archduke', 'Archduchess', 'Count', 'Countess', 'Dean',
             'Earl', 'Baron', 'Baroness', 'His Grace', 'Her Grace', 'His Magesty', 'Her Magesty',
             'Viceroy', 'Vicereine', 'Tsar', 'Tsarina', 'Caesar', 'His Holiness', 'Her Holiness',
             'Princeps', 'Chief Justice', 'Elder', 'Major', 'Grand Admiral'];
 
-        const attributes: string[] = ['Hairy', 'Smelly', 'Tall', 'Old', 'Young', 'Energetic',
+        let attributes: string[] = ['Hairy', 'Smelly', 'Tall', 'Old', 'Young', 'Energetic',
             'Lazy', 'Helpful', 'Untrustworthy', 'Trustworthy', 'Patient', 'Perceptive', 'Modest',
             'Sincere', 'Ambitious', 'Cheerful', 'Curious', 'Arrogant', 'Cynical', 'Decietful',
-            'Intolerant', 'Pessimistic', 'Optimistic', 'Cowardly', 'Inconsiderate', 'Mean',
+            'Intolerable', 'Pessimistic', 'Optimistic', 'Cowardly', 'Inconsiderate', 'Mean',
             'Jealous', 'Boring', 'Short', 'Bossy', 'Selfish', 'Stupid', 'Smart', 'Rude', 'Agreeable',
-            'Honorable', 'Attractive', 'Bald', 'Magnificant', 'Witty', 'Repulsive', 'Slow', 'Annoying'];
+            'Honorable', 'Attractive', 'Bald', 'Magnificant', 'Witty', 'Repulsive', 'Slow', 'Annoying', ''];
 
-        const nouns: string[] = ['Person', 'Dog', 'Peacock', 'Pig', 'Lion', 'Llama', 'Skunk', 'Aardvark',
+        let nouns: string[] = ['Person', 'Dog', 'Peacock', 'Pig', 'Lion', 'Llama', 'Skunk', 'Aardvark',
             'Penguin', 'Whale', 'Beaver', 'Cat', 'Fox', 'Owl', 'Wolf', 'Shark', 'Cow', 'Snail', 'Donkey',
             'Monkey', 'Tiger', 'Fish', 'Elephant', 'Caterpillar', 'Wasp', 'Bee', 'Spider', 'Parrot', 'Camel',
             'Eagle', 'Bear', 'Hummingbird', 'Ferret', 'Butterfly', 'Snake', 'Hyena', 'Frog'];
 
-        const suffix: string[] = ['Sr.', 'Jr.', 'III', 'IV', 'V', ', Esq.'];
+        let suffixes: string[] = ['Sr.', 'Jr.', 'III', 'IV', ', Esq.'];
 
-        let name: string = `${this.randomizeCollectionValue(attributes)} ${this.randomizeCollectionValue(nouns)}`;
+        const names: string[] = [];
+        let name: string = '';
 
-        if ((Math.floor(Math.random() * 100) + 1) > 90) { name = `${this.randomizeCollectionValue(titles)} ${name}`; } else { name = `The ${name}`; }
+        for (let i = 0; i < numberOfNames; i++) {
 
-        if ((Math.floor(Math.random() * 100) + 1) > 90) { name = `${name} ${this.randomizeCollectionValue(suffix)}`; }
+            const attribute: string = this.randomizeCollectionValue(attributes);
+            attributes = attributes.filter(attr => attr !== attribute);
 
-        return name;
+            const noun: string = this.randomizeCollectionValue(nouns);
+            nouns = nouns.filter(nn => nn !== noun);
+
+            name = `${attribute} ${noun}`;
+
+            if ((Math.floor(Math.random() * 100) + 1) > 90) {
+
+                const title: string = this.randomizeCollectionValue(titles);
+                titles = titles.filter(tit => tit !== title);
+
+                name = `${title} ${name}`;
+            }
+            else { name = `The ${name}`; }
+
+            if ((Math.floor(Math.random() * 100) + 1) > 90) {
+
+                const suffix: string = this.randomizeCollectionValue(suffixes);
+                suffixes = suffixes.filter(suff => suff !== suffix);
+
+                name = `${name} ${suffix}`;
+
+                name = name.replace('The', '');
+            }
+
+            names.push(name);
+        }
+
+        return names;
     }
 
     private randomizeCollectionValue(collection: any[]): any {
