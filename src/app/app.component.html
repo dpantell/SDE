@@ -15,38 +15,45 @@
     </div>
 
     <div>
+      <br />
+      Users: (You are <strong>{{me.name}}</strong>)
+      <br />
+      <br />
+      <div *ngFor="let user of userStore.users">
 
-      Roles
+        <div style="height: 30px;">
 
-      <div *ngFor="let role of roleStore.roles">
+          <span>
+            {{user.name}}
+          </span>
 
-        <div>
-          {{role.name}}
-        </div>
+          <span *ngFor="let phaseAction of user.role.actionMap">
 
-        <div *ngFor="let phaseAction of role.actionMap">
+            <span *ngIf="true">
+              <!-- is current phase equal to the phaseAction phase -->
+              <span *ngIf="true">
+                <!-- if this user is a legit target for my action -->
 
-          <div *ngIf="true">
+                <span *ngFor="let action of phaseAction.actions">
 
-            <!-- is current phase equal to the phaseAction phase -->
+                  <button (click)="stackStore.addActionToStack(user, action)">
 
-            <div *ngFor="let action of phaseAction.actions">
+                    Do {{action.name}}
 
-              <button (click)="stackStore.addActionToStack(role, action)">
+                  </button>
 
-                Do {{action.name}}
+                </span>
+              </span>
 
-              </button>
+            </span>
 
-            </div>
-
-          </div>
-
+          </span>
         </div>
 
       </div>
 
     </div>
+    <br />
     <button (click)="stackStore.getStack()">Inspect stack</button>
   </div>
 

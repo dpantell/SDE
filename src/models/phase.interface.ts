@@ -28,6 +28,7 @@ export interface Phase {
     name: string;
     category: PhaseCategory;
     style?: PhaseStyle;
+    timer?: any;
     beginActions?: PhaseAction[];
     endActions?: PhaseAction[];
     transitions: Transition[];

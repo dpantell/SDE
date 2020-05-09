@@ -2,7 +2,7 @@ import { observable, action, computed } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { Phase } from 'src/models/phase.interface';
 import { find, every, first } from 'lodash';
-import { GetPhasesService } from 'src/services/get-phases.service';
+import { PhasesService } from 'src/services/phases.service';
 import { PhaseStyle } from 'src/models/enums/phase-style.enum';
 import { Transition } from 'src/models/transition.interface';
 import { TransitionService } from 'src/services/transition.service';
@@ -15,7 +15,7 @@ export class PhaseStore {
     @observable private currentPhase: Phase;
 
     constructor(
-        private getPhasesService: GetPhasesService,
+        private getPhasesService: PhasesService,
         private transitionService: TransitionService,
         private actionService: ActionService
     ) {
@@ -57,14 +57,14 @@ export class PhaseStore {
 
         const transition = this.getAvailableTransition(this.currentPhase);
 
-        if (transition) {
+        if (!transition) { return; }
 
-            this.actionService.executePhaseActions(this.currentPhase.endActions);
+        this.actionService.executePhaseActions(this.currentPhase.endActions);
 
-            this.currentPhase = find(this.phases, phase => phase.name === transition.target);
+        this.currentPhase = find(this.phases, phase => phase.name === transition.target);
 
-            this.actionService.executePhaseActions(this.currentPhase.beginActions);
-        }
+        this.actionService.executePhaseActions(this.currentPhase.beginActions);
+
     }
 
     private getAvailableTransition(phase: Phase): Transition {
