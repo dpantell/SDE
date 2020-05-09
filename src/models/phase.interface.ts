@@ -1,7 +1,7 @@
-import { PhaseStyle } from './phase-style.enum';
+import { PhaseStyle } from './enums/phase-style.enum';
 import { Transition } from './transition.interface';
-import { Alignment } from './alignment.enum';
-import { Quantifier } from './quantifier.enum';
+import { Alignment } from './enums/alignment.enum';
+import { Quantifier } from './enums/quantifier.enum';
 
 export enum PhaseCategory {
     DAY,

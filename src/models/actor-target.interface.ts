@@ -1,8 +1,8 @@
-import { RoleType } from './role.enum';
-import { Alignment } from './alignment.enum';
-import { Quantifier } from './quantifier.enum';
-import { ActorState } from './actor-state.enum';
-import { LogicalOperator } from './logical-operator.enum';
+import { RoleType } from './enums/role.enum';
+import { Alignment } from './enums/alignment.enum';
+import { Quantifier } from './enums/quantifier.enum';
+import { ActorState } from './enums/actor-state.enum';
+import { LogicalOperator } from './enums/logical-operator.enum';
 
 export interface ActorTarget {
     quantifier: Quantifier;

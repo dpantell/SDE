@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { PhaseCategory } from 'src/models/phase.interface';
 import { Role, CombatPower } from 'src/models/role.interface';
 import { EVIL_WIN_CONDITION_COLLECTION, GOOD_WIN_CONDITION_COLLECTION } from 'src/models/win-condition.interface';
-import { RoleType } from 'src/models/role.enum';
-import { Alignment } from 'src/models/alignment.enum';
+import { RoleType } from 'src/models/enums/role.enum';
+import { Alignment } from 'src/models/enums/alignment.enum';
 import { QUEUED_KILL, QUERY_ALIGNMENT } from 'src/models/role-action.interface';
 
 @Injectable({ providedIn: 'root' })

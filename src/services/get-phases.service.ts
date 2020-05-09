@@ -1,8 +1,8 @@
-import { Quantifier } from './../models/quantifier.enum';
+import { Quantifier } from '../models/enums/quantifier.enum';
 import { PhaseVerb } from './../models/phase.interface';
 import { Injectable } from '@angular/core';
 import { Phase, PhaseCategory, PhaseAction } from 'src/models/phase.interface';
-import { PhaseStyle } from 'src/models/phase-style.enum';
+import { PhaseStyle } from 'src/models/enums/phase-style.enum';
 
 @Injectable({ providedIn: 'root' })
 export class GetPhasesService {

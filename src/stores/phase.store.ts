@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Phase } from 'src/models/phase.interface';
 import { find, every, first } from 'lodash';
 import { GetPhasesService } from 'src/services/get-phases.service';
-import { PhaseStyle } from 'src/models/phase-style.enum';
+import { PhaseStyle } from 'src/models/enums/phase-style.enum';
 import { Transition } from 'src/models/transition.interface';
 import { TransitionService } from 'src/services/transition.service';
 import { ActionService } from 'src/services/action.service';

@@ -1,11 +1,11 @@
-import { Comparator } from './comparator.enum';
-import { Quantifier } from './quantifier.enum';
-import { LogicalOperator } from './logical-operator.enum';
-import { Alignment } from './alignment.enum';
-import { RoleType } from './role.enum';
+import { Comparator } from './enums/comparator.enum';
+import { Quantifier } from './enums/quantifier.enum';
+import { LogicalOperator } from './enums/logical-operator.enum';
+import { Alignment } from './enums/alignment.enum';
+import { RoleType } from './enums/role.enum';
 import { Descriptor } from './descriptor.interface';
 import { ActorTarget } from './actor-target.interface';
-import { ActorState } from './actor-state.enum';
+import { ActorState } from './enums/actor-state.enum';
 
 export interface WinCollection {
     operator: LogicalOperator;

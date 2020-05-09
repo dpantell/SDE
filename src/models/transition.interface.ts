@@ -1,6 +1,6 @@
 import { Phase } from './phase.interface';
-import { GameState } from './game-State.enum';
-import { Comparator } from './comparator.enum';
+import { GameState } from './enums/game-state.enum';
+import { Comparator } from './enums/comparator.enum';
 
 export interface TransitionCondition {
     state: GameState;
