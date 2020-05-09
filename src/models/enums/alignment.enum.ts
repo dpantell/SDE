@@ -1,5 +1,5 @@
 export enum Alignment {
-    GOOD,
-    NEUTRAL,
-    EVIL
+    GOOD = 'GOOD',
+    NEUTRAL = 'NEUTRAL',
+    EVIL = 'EVIL'
 }

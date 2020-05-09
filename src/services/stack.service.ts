@@ -1,26 +1,11 @@
 import { Injectable } from '@angular/core';
-import { PhaseAction } from 'src/models/phase.interface';
-import { each } from 'lodash';
-import { RoleAction, ActionMutation } from 'src/models/role-action.interface';
+import { RoleAction, ActionMutation, ActionQuery } from 'src/models/role-action.interface';
 import { User } from 'src/models/user.interface';
 import { Alignment } from 'src/models/enums/alignment.enum';
+import { StackActionItem } from 'src/models/stack-action-item.interface';
 
 @Injectable({ providedIn: 'root' })
-export class ActionService {
-
-    public executePhaseActions(actions: PhaseAction[]) {
-
-        each(actions, action => this.executeAction(action));
-    }
-
-    public executeQueuedActions(actions: any[]) { // RoleAction
-
-        each(actions, action => this.executeAction(action));
-    }
-
-    private executeAction(action: PhaseAction) {
-
-    }
+export class StackService {
 
     public isTargetUserAllowableForAction(requestor: User, target: User, action: RoleAction): boolean {
 
@@ -50,5 +35,38 @@ export class ActionService {
         if (requestorIsEvil && targetIsEvil && isKillAction) { return false; }
 
         return true;
+    }
+
+    public executeActionQuery(stackItem: StackActionItem): any {
+        // TODO: Do we want another validity check on the action?
+        let queryResults: any;
+
+        switch (stackItem.action.requestedQuery) {
+            case ActionQuery.ALIGNMENT: {
+                queryResults = stackItem.target.role.alignment;
+                break;
+            }
+            case ActionQuery.ROLE: {
+                queryResults = stackItem.target.role.name;
+                break;
+            }
+            case ActionQuery.VISITED: {
+                queryResults = 'NOT IMPLEMENTED - VISITED';
+                break;
+            }
+            case ActionQuery.VISITED_BY: {
+                queryResults = 'NOT IMPLEMENTED - VISITED BY';
+                break;
+            }
+            default: return null;
+        }
+        // Private message the requestor the information
+        // Server.whisper(stackItem.requestor, queryResults)
+        console.log(`The results of your query: ${queryResults}`);
+    }
+
+    public executeActionMutation(stackItem: StackActionItem): void {
+        // TODO: Do we want another validity check on the action?
+
     }
 }

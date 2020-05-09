@@ -16,28 +16,30 @@
 
     <div>
       <br />
-      Users: (You are <strong>{{me.name}}</strong>)
+      Users: (You are <strong>{{me.name}}</strong> and your role is <strong>{{me.role.name}}</strong>)
       <br />
       <br />
-      <div *ngFor="let user of userStore.users">
+      <div *ngFor="let target of userStore.users; index as i">
 
         <div style="height: 30px;">
 
           <span>
-            {{user.name}}
+            ({{i + 1}}) {{target.name}}
           </span>
 
           <span *ngFor="let phaseAction of me.role.actionMap">
 
-            <span *ngIf="gameState.currentPhase?.name === phaseStore.currentPhaseName">
-              <!-- is current phase equal to the phaseAction phase -->
+            <!-- If action is enabled during the current phase -->
+            <span *ngIf="isActionEnabledDuringPhase(phaseAction)">
+
               <span *ngFor="let action of phaseAction.actions">
 
-                <span *ngIf="actionService.isTargetUserAllowableForAction(me, user, action)">
+                <!-- If the target for the action is allowable -->
+                <span *ngIf="stackService.isTargetUserAllowableForAction(me, target, action)">
 
-                  <button (click)="stackStore.addActionToStack(user, action)">
+                  <button (click)="stackStore.addActionToStack(me, target, action)">
 
-                    Do {{action.name}}
+                    Perform {{action.name}}
 
                   </button>
 
@@ -53,7 +55,8 @@
 
     </div>
     <br />
-    <button (click)="stackStore.getStack()">Inspect stack</button>
+    <span>Stack:</span>
+    <pre>{{stackStore.stack | json}}</pre>
   </div>
 
 </router-outlet>

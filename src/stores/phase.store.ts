@@ -1,3 +1,4 @@
+import { StackStore } from 'src/stores/stack.store';
 import { observable, action, computed } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { Phase } from 'src/models/phase.interface';
@@ -6,35 +7,33 @@ import { PhasesService } from 'src/services/phases.service';
 import { PhaseStyle } from 'src/models/enums/phase-style.enum';
 import { Transition } from 'src/models/transition.interface';
 import { TransitionService } from 'src/services/transition.service';
-import { ActionService } from 'src/services/action.service';
 
 @Injectable({ providedIn: 'root' })
 export class PhaseStore {
 
     @observable private phases: Phase[];
-    @observable private currentPhase: Phase;
+    @observable private _currentPhase: Phase;
 
     constructor(
         private getPhasesService: PhasesService,
         private transitionService: TransitionService,
-        private actionService: ActionService
+        private stackStore: StackStore
     ) {
     }
 
-    // TODO: Rename
-    @computed get getCurrentPhase(): Phase {
+    @computed get currentPhase(): Phase {
 
-        return this.currentPhase;
+        return this._currentPhase;
     }
 
     @computed get currentPhaseName(): string {
 
-        return this.currentPhase?.name;
+        return this._currentPhase?.name;
     }
 
     @computed get style(): PhaseStyle {
 
-        return this.currentPhase?.style;
+        return this._currentPhase?.style;
     }
 
     @computed get styleClass(): string {
@@ -56,20 +55,20 @@ export class PhaseStore {
 
         this.phases = this.getPhasesService.getPhases();
 
-        this.currentPhase = first(this.phases);
+        this._currentPhase = first(this.phases);
     }
 
     @action next(): void {
 
-        const transition = this.getAvailableTransition(this.currentPhase);
+        const transition = this.getAvailableTransition(this._currentPhase);
 
         if (!transition) { return; }
 
-        this.actionService.executePhaseActions(this.currentPhase.endActions);
+        this.stackStore.executePhaseActions(this._currentPhase.endActions);
 
-        this.currentPhase = find(this.phases, phase => phase.name === transition.target);
+        this._currentPhase = find(this.phases, phase => phase.name === transition.target);
 
-        this.actionService.executePhaseActions(this.currentPhase.beginActions);
+        this.stackStore.executePhaseActions(this._currentPhase.beginActions);
 
     }
 
