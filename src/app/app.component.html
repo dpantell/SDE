@@ -4,7 +4,7 @@
 
     <div [ngClass]="phaseStore.styleClass">
       <div>
-        current phase: {{phaseStore.currentPhaseName}}
+        current phase: {{gameStateStore.gameState.currentPhase.name}}
       </div>
       <div>
         <!-- Timer: {{phaseStore.currentPhase.timerDuration ? true : false}} -->
