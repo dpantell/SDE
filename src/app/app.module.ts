@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { MobxAngularModule } from 'mobx-angular';
 
 import { AppRoutingModule } from './app-routing.module';
+import { CountdownModule } from 'ngx-countdown';
 import { AppComponent } from './app.component';
 import { configure } from 'mobx';
 
@@ -12,6 +13,7 @@ import { configure } from 'mobx';
   ],
   imports: [
     BrowserModule,
+    CountdownModule,
     AppRoutingModule,
     MobxAngularModule
   ],

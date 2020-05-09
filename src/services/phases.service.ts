@@ -13,6 +13,7 @@ export class PhasesService {
             name: 'Chat',
             style: PhaseStyle.Daylight,
             category: PhaseCategory.DAY,
+            countdownConfig: { leftTime: 30 },
             beginActions: [],
             endActions: [],
             transitions: []
@@ -22,6 +23,7 @@ export class PhasesService {
             name: 'Nomination',
             style: PhaseStyle.Daylight,
             category: PhaseCategory.DAY,
+            countdownConfig: { leftTime: 30 },
             beginActions: [],
             endActions: [],
             transitions: []
@@ -31,6 +33,7 @@ export class PhasesService {
             name: 'Stand',
             style: PhaseStyle.Daylight,
             category: PhaseCategory.DAY,
+            countdownConfig: { leftTime: 15 },
             beginActions: [],
             endActions: [],
             transitions: []
@@ -40,6 +43,7 @@ export class PhasesService {
             name: 'Vote',
             style: PhaseStyle.Daylight,
             category: PhaseCategory.DAY,
+            countdownConfig: { leftTime: 15 },
             beginActions: [],
             endActions: [],
             transitions: []
@@ -49,6 +53,7 @@ export class PhasesService {
             name: 'Night',
             style: PhaseStyle.StarryNight,
             category: PhaseCategory.NIGHT,
+            countdownConfig: { leftTime: 30 },
             beginActions: [
                 {
                     verb: PhaseVerb.RESOLVE_QUEUED_ACTIONS,

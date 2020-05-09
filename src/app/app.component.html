@@ -6,6 +6,10 @@
       <div>
         current phase: {{phaseStore.currentPhaseName}}
       </div>
+      <div>
+        <!-- Timer: {{phaseStore.currentPhase.timerDuration ? true : false}} -->
+        <countdown #cd [config]="phaseStore.currentPhase.countdownConfig" (event)="phaseStore.next()"></countdown>
+      </div>
 
       <br>
 

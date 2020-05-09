@@ -2,6 +2,7 @@ import { PhaseStyle } from './enums/phase-style.enum';
 import { Transition } from './transition.interface';
 import { Alignment } from './enums/alignment.enum';
 import { Quantifier } from './enums/quantifier.enum';
+import { CountdownConfig } from 'ngx-countdown';
 
 export enum PhaseCategory {
     DAY,
@@ -28,7 +29,7 @@ export interface Phase {
     name: string;
     category: PhaseCategory;
     style?: PhaseStyle;
-    timer?: any;
+    countdownConfig?: CountdownConfig;
     beginActions?: PhaseAction[];
     endActions?: PhaseAction[];
     transitions: Transition[];
