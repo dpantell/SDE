@@ -3,11 +3,9 @@ import { Quantifier } from './quantifier.enum';
 import { LogicalOperator } from './logical-operator.enum';
 import { Alignment } from './alignment.enum';
 import { RoleType } from './role.enum';
-
-export enum WinState {
-    DEAD,
-    ALIVE
-}
+import { Descriptor } from './descriptor.interface';
+import { ActorTarget } from './actor-target.interface';
+import { ActorState } from './actor-state.enum';
 
 export interface WinCollection {
     operator: LogicalOperator;
@@ -19,28 +17,16 @@ export interface NumericComparision {
     amount: number;
 }
 
-export interface WinTarget {
-    quantifier: Quantifier;
-    alignment?: Alignment;
-    role?: RoleType;
-}
-
-export interface Descriptor {
-    icon: string;
-    name: string;
-    description: string;
-}
-
 export interface WinCondition {
     name: string;
     description: string;
-    target: WinTarget;
+    target: ActorTarget;
     condition: WinStateCondition;
     collection?: WinCollection;
 }
 
 export interface WinStateCondition {
-    state: WinState;
+    state: ActorState;
     equality: NumericComparision;
 }
 
@@ -51,12 +37,12 @@ export const NONE: NumericComparision = {
 
 export const ALL_DEAD: WinStateCondition = {
     equality: NONE,
-    state: WinState.ALIVE
+    state: ActorState.ALIVE
 };
 
 export const ALL_ALIVE: WinStateCondition = {
     equality: NONE,
-    state: WinState.DEAD
+    state: ActorState.DEAD
 };
 
 export const NO_DESCRIPTION: Descriptor = {
@@ -136,7 +122,7 @@ export const ONE_TARGET_DEAD: WinCondition = {
             comparator: Comparator.GTE,
             amount: 1
         },
-        state: WinState.ALIVE
+        state: ActorState.ALIVE
     }
 };
 
