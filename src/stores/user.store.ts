@@ -22,23 +22,24 @@ export class UserStore {
     private getMockUsers(): User[] {
 
         const users: User[] = [
-            this.generateMockUser(this.roleStore.roles[0]),
-            this.generateMockUser(),
-            this.generateMockUser(),
-            this.generateMockUser(),
-            this.generateMockUser(),
-            this.generateMockUser(),
-            this.generateMockUser(),
-            this.generateMockUser(),
-            this.generateMockUser(),
-            this.generateMockUser(),
+            this.generateMockUser(1, this.roleStore.roles[0]),
+            this.generateMockUser(2),
+            this.generateMockUser(3),
+            this.generateMockUser(4),
+            this.generateMockUser(5, this.roleStore.roles[0]),
+            this.generateMockUser(6),
+            this.generateMockUser(7),
+            this.generateMockUser(8),
+            this.generateMockUser(9, this.roleStore.roles[0]),
+            this.generateMockUser(10),
         ];
 
         return users;
     }
 
-    private generateMockUser(role?: Role): User {
+    private generateMockUser(id: string | number, role?: Role): User {
         return {
+            id: `${id}`,
             name: this.generateUserName(),
             role: role || this.roleStore.roles[1]
         };

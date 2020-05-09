@@ -4,7 +4,7 @@
 
     <div [ngClass]="phaseStore.styleClass">
       <div>
-        current phase: {{phaseStore.name}}
+        current phase: {{phaseStore.currentPhaseName}}
       </div>
 
       <br>
@@ -27,14 +27,13 @@
             {{user.name}}
           </span>
 
-          <span *ngFor="let phaseAction of user.role.actionMap">
+          <span *ngFor="let phaseAction of me.role.actionMap">
 
-            <span *ngIf="true">
+            <span *ngIf="gameState.currentPhase?.name === phaseStore.currentPhaseName">
               <!-- is current phase equal to the phaseAction phase -->
-              <span *ngIf="true">
-                <!-- if this user is a legit target for my action -->
+              <span *ngFor="let action of phaseAction.actions">
 
-                <span *ngFor="let action of phaseAction.actions">
+                <span *ngIf="actionService.isTargetUserAllowableForAction(me, user, action)">
 
                   <button (click)="stackStore.addActionToStack(user, action)">
 

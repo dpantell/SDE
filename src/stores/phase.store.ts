@@ -21,7 +21,13 @@ export class PhaseStore {
     ) {
     }
 
-    @computed get name(): string {
+    // TODO: Rename
+    @computed get getCurrentPhase(): Phase {
+
+        return this.currentPhase;
+    }
+
+    @computed get currentPhaseName(): string {
 
         return this.currentPhase?.name;
     }
