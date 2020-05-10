@@ -19,6 +19,10 @@ export class GameStateStore {
         return this._gameState;
     }
 
+    @computed get currentDay(): number {
+        return this._gameState.currentDay;
+    }
+
     @action resetState(): void {
 
         this._gameState = this.getDefaultGameState();
@@ -28,7 +32,8 @@ export class GameStateStore {
         return {
             aliveUsers: this.userStore.aliveUsers,
             deadUsers: this.userStore.deadUsers,
-            currentPhase: this.phaseStore.currentPhase
+            currentPhase: this.phaseStore.currentPhase,
+            currentDay: 1
         };
     }
 

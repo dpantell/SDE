@@ -12,6 +12,7 @@ import { TransitionService } from 'src/services/transition.service';
 export class PhaseStore {
 
     @observable private phases: Phase[];
+    @observable private _iterations: number;
     @observable private _currentPhase: Phase;
 
     constructor(
@@ -36,6 +37,10 @@ export class PhaseStore {
         return this._currentPhase?.style;
     }
 
+    @computed get iterations(): number {
+        return this._iterations;
+    }
+
     @computed get styleClass(): string {
 
         switch (this.style) {
@@ -56,6 +61,8 @@ export class PhaseStore {
         this.phases = this.getPhasesService.getPhases();
 
         this._currentPhase = first(this.phases);
+
+        this._iterations = 1;
     }
 
     @action next(): void {
@@ -67,6 +74,10 @@ export class PhaseStore {
         this.stackStore.executePhaseActions(this._currentPhase.endActions);
 
         this._currentPhase = find(this.phases, phase => phase.name === transition.target);
+
+        if (this._currentPhase === first(this.phases)) {
+            this._iterations++;
+        }
 
         this.stackStore.executePhaseActions(this._currentPhase.beginActions);
 

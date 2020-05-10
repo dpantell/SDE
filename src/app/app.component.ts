@@ -1,13 +1,13 @@
 import { GameStateStore } from './../stores/gamestate.store';
 import { UserStore } from './../stores/user.store';
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { PhaseStore } from 'src/stores/phase.store';
 import { RoleStore } from 'src/stores/role.store';
 import { StackStore } from 'src/stores/stack.store';
 import { User } from 'src/models/user.interface';
 import { StackService } from 'src/services/stack.service';
 import { PhaseActionMap } from 'src/models/role-action.interface';
-import { CountdownComponent, CountdownConfig, CountdownEvent, CountdownStatus } from 'ngx-countdown';
+import { CountdownEvent, CountdownStatus, CountdownConfig } from 'ngx-countdown';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +18,7 @@ import { CountdownComponent, CountdownConfig, CountdownEvent, CountdownStatus } 
 export class AppComponent implements OnInit {
 
   public me: User;
+  public config: CountdownConfig;
 
   constructor(
     public stackStore: StackStore,
@@ -42,11 +43,12 @@ export class AppComponent implements OnInit {
     this.me = me;
   }
 
+
   public triggerNextPhase(event: CountdownEvent): void {
     console.log(event);
 
     if (event.status === CountdownStatus.done) {
-      this.phaseStore.next();
+      setTimeout(() => { this.phaseStore.next(); }, 1000);
     }
   }
 

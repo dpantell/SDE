@@ -4,13 +4,13 @@
 
     <div [ngClass]="gameStateStore.gameState.currentPhase.style">
       <div>
-        current phase: {{gameStateStore.gameState.currentPhase.name}}
+        <!-- current phase: {{gameStateStore.gameState.currentPhase.name}} -->
+        <span style="display: block;">Day: {{phaseStore.iterations}}</span>
+        <span style="display: block;">{{phaseStore.currentPhaseName}} Phase</span>
       </div>
-      <div>
+      <div style="padding-top: 10px;">
         <!-- Timer -->
-        <!-- <countdown #cd [config]="phaseStore?.currentPhase?.countdownConfig" (event)="triggerNextPhase($event)"></countdown> -->
-        <!-- <countdown #cd [config]="config" (event)="triggerNextPhase($event)"></countdown> -->
-        <countdown #cd [config]="gameStateStore.gameState.currentPhase.countdownConfig" (event)="triggerNextPhase($event)"></countdown>
+        <countdown #cd [config]="phaseStore?.currentPhase?.countdownConfig" (event)="triggerNextPhase($event, 'real')"></countdown>
       </div>
 
       <br>
