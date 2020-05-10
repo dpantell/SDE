@@ -2,13 +2,15 @@
 
   <div *mobxAutorun>
 
-    <div [ngClass]="phaseStore.styleClass">
+    <div [ngClass]="gameStateStore.gameState.currentPhase.style">
       <div>
         current phase: {{gameStateStore.gameState.currentPhase.name}}
       </div>
       <div>
-        <!-- Timer: {{phaseStore.currentPhase.timerDuration ? true : false}} -->
-        <countdown #cd [config]="phaseStore?.currentPhase?.countdownConfig" (event)="phaseStore.next()"></countdown>
+        <!-- Timer -->
+        <!-- <countdown #cd [config]="phaseStore?.currentPhase?.countdownConfig" (event)="triggerNextPhase($event)"></countdown> -->
+        <!-- <countdown #cd [config]="config" (event)="triggerNextPhase($event)"></countdown> -->
+        <countdown #cd [config]="gameStateStore.gameState.currentPhase.countdownConfig" (event)="triggerNextPhase($event)"></countdown>
       </div>
 
       <br>

@@ -7,7 +7,7 @@ import { StackStore } from 'src/stores/stack.store';
 import { User } from 'src/models/user.interface';
 import { StackService } from 'src/services/stack.service';
 import { PhaseActionMap } from 'src/models/role-action.interface';
-import { CountdownComponent, CountdownConfig } from 'ngx-countdown';
+import { CountdownComponent, CountdownConfig, CountdownEvent, CountdownStatus } from 'ngx-countdown';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +16,6 @@ import { CountdownComponent, CountdownConfig } from 'ngx-countdown';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
-
-  @ViewChild('cd', { static: false }) private countdown: CountdownComponent;
 
   public me: User;
 
@@ -42,7 +40,14 @@ export class AppComponent implements OnInit {
     const me = this.userStore.aliveUsers[0];
 
     this.me = me;
-    this.countdown.begin();
+  }
+
+  public triggerNextPhase(event: CountdownEvent): void {
+    console.log(event);
+
+    if (event.status === CountdownStatus.done) {
+      this.phaseStore.next();
+    }
   }
 
   public isActionEnabledDuringPhase(action: PhaseActionMap): boolean {
