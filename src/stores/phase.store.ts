@@ -1,4 +1,3 @@
-import { StackStore } from 'src/stores/stack.store';
 import { observable, action, computed } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { Phase } from 'src/models/phase.interface';

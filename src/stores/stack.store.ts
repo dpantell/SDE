@@ -7,7 +7,6 @@ import { User } from 'src/models/user.interface';
 import { PhaseAction, PhaseVerb } from 'src/models/phase.interface';
 import { StackActionItem } from 'src/models/stack-action-item.interface';
 import { UserStore } from './user.store';
-import { Transition } from 'src/models/transition.interface';
 import { PhaseStore } from './phase.store';
 
 @Injectable({ providedIn: 'root' })
