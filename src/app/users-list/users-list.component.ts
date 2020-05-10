@@ -18,6 +18,18 @@ export class UsersListComponent {
         public stackStore: StackStore,
         public userStore: UserStore,
         public allowedActionStore: AllowedActionStore
-    ) {
+    ) { }
+
+    public forceAction(requestorId: string, targetId: string): void {
+
+        const forcedRequestor = this.userStore.aliveUsers.find(user => user.id === requestorId);
+        const forcedTarget = this.userStore.aliveUsers.find(user => user.id === targetId);
+        const forcedRequestorAction = forcedRequestor.role.allowedActions[0].action;
+
+        this.stackStore.addActionToStack(
+            forcedRequestor,
+            forcedTarget,
+            forcedRequestorAction
+        );
     }
 }

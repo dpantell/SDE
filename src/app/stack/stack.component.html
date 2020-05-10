@@ -1,8 +1,13 @@
 <div *mobxAutorun>
-    <span>Stack:</span>
-    <div style="border: 1px solid gray; max-width: 300px;" *ngFor="let stackItem of stackStore.stack">
-        <h3>{{stackItem.action.name}} {{stackItem.target.name}}</h3>
-        <h4>Requested by: {{stackItem.requestor.name}}</h4>
+    <div style="padding-top: 10px;">
+        <span>Stack:</span>
+        <div *ngFor="let stackItem of stackStore.stack">
+            <div [ngClass]="stackItem.action.name === 'Kill' ? 'kill-stack-item' : 'normal-stack-item'">
+                <h3>{{stackItem.action.name}} {{stackItem.target.name}}</h3>
+                <h4>Requested by: {{stackItem.requestor.name}}</h4>
+            </div>
+        </div>
+        <!-- <pre>{{stackStore.stack | json}}</pre> -->
     </div>
-    <!-- <pre>{{stackStore.stack | json}}</pre> -->
+
 </div>
