@@ -75,7 +75,20 @@ export class RoleStore {
                     allowablePhases: [
                         PhaseCategory.NIGHT
                     ],
-                    targetCriteria: [],
+                    targetCriteria: [
+                        {
+                            quantifier: Quantifier.ALL,
+                            alignment: Alignment.GOOD
+                        },
+                        {
+                            quantifier: Quantifier.ALL,
+                            alignment: Alignment.EVIL
+                        },
+                        {
+                            quantifier: Quantifier.ALL,
+                            alignment: Alignment.NEUTRAL
+                        }
+                    ],
                     action: QUERY_ALIGNMENT
                 },
             ],

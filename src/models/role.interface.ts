@@ -21,6 +21,8 @@ export interface Role {
     queryImmunity: ActionQuery[];
     mutationImmunity: ActionMutation[];
 
+    state?: any;
+
     attack: CombatPower;
     defense: CombatPower;
 }
