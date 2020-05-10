@@ -23,6 +23,13 @@ export class StackStore {
     @action addActionToStack(requestor: User, target: User, roleAction: RoleAction): void {
         console.log(`User: "${requestor.name}" with Role: "${requestor.role.name}" requested to perform Action: "${roleAction.name}" on User "${target.name}"`);
 
+        const existingUserActions: StackActionItem[] = this.stack.filter(sa => sa.requestor.id === requestor.id);
+
+        // If user already has more existing actions than allowed, remove all previous actions
+        if (existingUserActions.length >= requestor.role.maxActionTargets) {
+            this.stack = this.stack.filter(sa => sa.requestor.id !== requestor.id);
+        }
+
         const stackAction: StackActionItem = {
             id: uuidv4(),
             requestor,

@@ -47,6 +47,7 @@ export class RoleStore {
                     ]
                 },
             ],
+            maxActionTargets: 1,
             winConditions: EVIL_WIN_CONDITION_COLLECTION,
             queryImmunity: [],
             mutationImmunity: [],
@@ -73,6 +74,7 @@ export class RoleStore {
                     ]
                 },
             ],
+            maxActionTargets: 1,
             winConditions: GOOD_WIN_CONDITION_COLLECTION,
             queryImmunity: [],
             mutationImmunity: [],
@@ -99,6 +101,7 @@ export class RoleStore {
                     ]
                 },
             ],
+            maxActionTargets: 1,
             winConditions: GOOD_WIN_CONDITION_COLLECTION,
             queryImmunity: [],
             mutationImmunity: [],

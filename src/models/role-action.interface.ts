@@ -1,5 +1,4 @@
 import { PhaseCategory } from './phase.interface';
-import { Descriptor } from './descriptor.interface';
 
 export enum RoleActionType {
     IMMEDIATE,
