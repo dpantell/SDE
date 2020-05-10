@@ -85,3 +85,12 @@ export const QUERY_ROLE: RoleAction = {
     priorty: PriorityLevel.LOW,
     requestedQuery: ActionQuery.ROLE
 };
+
+export const STOP_ACTION: RoleAction = {
+    icon: '',
+    name: 'Role Block',
+    description: 'Stop the target user from performing their action',
+    type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.MEDIUM,
+    requestedMutation: ActionMutation.STOP_ACTION
+};

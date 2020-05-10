@@ -12,14 +12,24 @@ import { TransitionService } from 'src/services/transition.service';
 export class PhaseStore {
 
     @observable private phases: Phase[];
-    @observable private _iterations: number;
     @observable private _currentPhase: Phase;
+    @observable private _phaseCycleCount: number;
 
     constructor(
         private phasesService: PhasesService,
         private transitionService: TransitionService,
         private stackStore: StackStore
     ) {
+    }
+
+    @computed get cycleMessage(): string {
+
+        return `Day: ${this.phaseCycleCount + 1}`;
+    }
+
+    @computed get phaseMessage(): string {
+
+        return `${this.currentPhaseName} Phase`;
     }
 
     @computed get currentPhase(): Phase {
@@ -29,16 +39,22 @@ export class PhaseStore {
 
     @computed get currentPhaseName(): string {
 
-        return this._currentPhase?.name;
+        return this.currentPhase?.name;
     }
 
     @computed get style(): PhaseStyle {
 
-        return this._currentPhase?.style;
+        return this.currentPhase?.style;
     }
 
-    @computed get iterations(): number {
-        return this._iterations;
+    @computed get phaseCycleCount(): number {
+
+        return this._phaseCycleCount;
+    }
+
+    @computed get availableTransition(): Transition {
+
+        return find(this.currentPhase.transitions, transition => this.isTransitionReady(transition));
     }
 
     @computed get styleClass(): string {
@@ -62,32 +78,29 @@ export class PhaseStore {
 
         this._currentPhase = first(this.phases);
 
-        this._iterations = 1;
+        this._phaseCycleCount = 0;
     }
 
     @action next(): void {
 
-        const transition = this.getAvailableTransition(this._currentPhase);
+        if (this.availableTransition) {
 
-        if (!transition) { return; }
+            this.performTransition(this.availableTransition);
+        }
+    }
+
+    private performTransition(transition: Transition): void {
 
         this.stackStore.executePhaseActions(this._currentPhase.endActions);
 
         this._currentPhase = find(this.phases, phase => phase.name === transition.target);
 
         if (this._currentPhase === first(this.phases)) {
-            this._iterations++;
+
+            this._phaseCycleCount++;
         }
 
         this.stackStore.executePhaseActions(this._currentPhase.beginActions);
-
-    }
-
-    private getAvailableTransition(phase: Phase): Transition {
-
-        const availableTransition = find(phase.transitions, transition => this.isTransitionReady(transition));
-
-        return availableTransition;
     }
 
     private isTransitionReady(transition: Transition): boolean {

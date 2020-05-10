@@ -2,76 +2,14 @@
 
   <div *mobxAutorun>
 
-    <!-- [ngClass]="gameStateStore?.gameState?.currentPhase?.style"> -->
-    <div [ngClass]="phaseStore?.currentPhase?.style">
-      <div>
-        <!-- current phase: {{gameStateStore.gameState.currentPhase.name}} -->
-        <span style="display: block;">Day: {{phaseStore.iterations}}</span>
-        <span style="display: block;">{{phaseStore.currentPhaseName}} Phase</span>
-      </div>
-      <div style="padding-top: 10px;">
-        <!-- Timer -->
-        <countdown #cd [config]="phaseStore?.currentPhase?.countdownConfig" (event)="triggerNextPhase($event)"></countdown>
-        <!-- <countdown #cd [config]="gameStateStore?.gameState?.currentPhase?.countdownConfig" (event)="triggerNextPhase($event)"></countdown> -->
-      </div>
+    <app-phase></app-phase>
 
-      <br>
+    <app-users-list></app-users-list>
 
-      <button (click)="phaseStore.next()">
-        go to next phase
-      </button>
-    </div>
+    <app-dead-users-list></app-dead-users-list>
 
-    <div>
-      <br />
-      Users: (You are <strong>{{me.name}}</strong> and your role is <strong>{{me.role.name}}</strong>)
-      <br />
-      <br />
-      <div *ngFor="let target of gameStateStore?.gameState?.aliveUsers; index as i">
+    <app-stack></app-stack>
 
-        <div style="height: 30px;">
-
-          <span>
-            ({{target.listPosition ? target.listPosition + 1 : i + 1}}) {{target.name}} {{target.id === me.id ? '(' + me.role.name + ')' : ''}}
-          </span>
-
-          <span *ngFor="let phaseAction of me.role.actionMap">
-
-            <!-- If action is enabled during the current phase -->
-            <span *ngIf="isActionEnabledDuringPhase(phaseAction)">
-
-              <span *ngFor="let action of phaseAction.actions">
-
-                <!-- If the target for the action is allowable -->
-                <span *ngIf="stackService.isTargetUserAllowableForAction(me, target, action)">
-
-                  <button (click)="stackStore.addActionToStack(me, target, action)">{{action.name}}</button>
-
-                </span>
-              </span>
-
-            </span>
-
-          </span>
-        </div>
-
-      </div>
-
-    </div>
-
-    <div style="padding-top: 20px;">
-      Dead Users:
-      <div *ngFor="let dead of gameStateStore?.gameState?.deadUsers; index as i">
-        <span>({{dead.listPosition ? dead.listPosition + 1 : ''}}) {{dead.name}}</span>
-      </div>
-    </div>
-    <br />
-    <span>Stack:</span>
-    <div style="border: 1px solid gray; max-width: 300px;" *ngFor="let stackItem of stackStore.stack">
-      <h3>{{stackItem.action.name}} {{stackItem.target.name}}</h3>
-      <h4>Requested by: {{stackItem.requestor.name}}</h4>
-    </div>
-    <!-- <pre>{{stackStore.stack | json}}</pre> -->
   </div>
 
 </router-outlet>

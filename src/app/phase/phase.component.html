@@ -1,0 +1,22 @@
+<div *mobxAutorun>
+
+    <div>
+
+        <span style="display: block;">{{phaseStore?.cycleMessage}}</span>
+        <span style="display: block;">{{phaseStore?.phaseMessage}}</span>
+
+    </div>
+
+    <div style="padding-top: 10px;">
+
+        <countdown #cd [config]="phaseStore?.currentPhase?.countdownConfig" (event)="triggerNextPhase($event)">
+        </countdown>
+
+    </div>
+
+    <br>
+
+    <button (click)="phaseStore.next()">
+        go to next phase
+    </button>
+</div>

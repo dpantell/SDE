@@ -1,13 +1,10 @@
-import { GameStateStore } from './../stores/gamestate.store';
 import { UserStore } from './../stores/user.store';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { PhaseStore } from 'src/stores/phase.store';
 import { RoleStore } from 'src/stores/role.store';
 import { StackStore } from 'src/stores/stack.store';
 import { User } from 'src/models/user.interface';
-import { StackService } from 'src/services/stack.service';
 import { PhaseActionMap } from 'src/models/role-action.interface';
-import { CountdownEvent, CountdownStatus, CountdownConfig } from 'ngx-countdown';
 
 @Component({
   selector: 'app-root',
@@ -24,8 +21,7 @@ export class AppComponent implements OnInit {
     public phaseStore: PhaseStore,
     public roleStore: RoleStore,
     public userStore: UserStore,
-    public stackService: StackService,
-    public gameStateStore: GameStateStore
+    // public gameStateStore: GameStateStore
   ) {
   }
 
@@ -35,19 +31,19 @@ export class AppComponent implements OnInit {
     this.phaseStore.resetState();
     this.roleStore.resetState();
     this.userStore.resetState();
-    this.gameStateStore.resetState();
 
     const me = this.userStore.aliveUsers[0];
 
     this.me = me;
   }
 
-  public triggerNextPhase(event: CountdownEvent): void {
-    console.log(event);
-
-    if (event.status === CountdownStatus.done) {
-      setTimeout(() => { this.phaseStore.next(); }, 1000);
-    }
+  public hook(): void {
+    // dispatch action from random user
+    this.stackStore.addActionToStack(
+      this.userStore.aliveUsers[1],
+      this.userStore.aliveUsers[2],
+      this.userStore.aliveUsers[1].role.actionMap[0].actions[0]
+    );
   }
 
   public isActionEnabledDuringPhase(action: PhaseActionMap): boolean {

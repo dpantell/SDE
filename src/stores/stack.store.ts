@@ -1,17 +1,21 @@
 import { v4 as uuidv4 } from 'uuid';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
-import { RoleAction, PriorityLevel } from 'src/models/role-action.interface';
+import { RoleAction, PriorityLevel, ActionMutation, ActionQuery } from 'src/models/role-action.interface';
 import { each, partition, isNil } from 'lodash';
 import { User } from 'src/models/user.interface';
 import { PhaseAction, PhaseVerb } from 'src/models/phase.interface';
-import { StackService } from 'src/services/stack.service';
 import { StackActionItem } from 'src/models/stack-action-item.interface';
+import { UserStore } from './user.store';
+import { Alignment } from 'src/models/enums/alignment.enum';
 
 @Injectable({ providedIn: 'root' })
 export class StackStore {
 
-    constructor(private stackService: StackService) { }
+    constructor(
+        private userStore: UserStore
+    ) {
+    }
 
     @observable public stack: StackActionItem[];
 
@@ -54,9 +58,15 @@ export class StackStore {
             !isNil(stackItem.action.requestedQuery) && isNil(stackItem.action.requestedMutation)
         );
 
-        each(queries, query => { this.stackService.executeActionQuery(query); this.popStackItem(query); });
+        // TODO: Separate by priority first, then query/mutation?
+        each(mutations, mutation => { this.executeActionMutation(mutation); this.popStackItem(mutation); });
 
-        each(mutations, mutation => { this.stackService.executeActionMutation(mutation); this.popStackItem(mutation); });
+        each(queries, query => { this.executeActionQuery(query); this.popStackItem(query); });
+
+
+        // const [lowPriorityActions, medPriorityActions, highPriorityActions] = this.separateStackByPriority();
+
+
     }
 
     public executePhaseActions(actions: PhaseAction[]) {
@@ -64,7 +74,37 @@ export class StackStore {
         each(actions, phaseAction => this.executePhaseAction(phaseAction));
     }
 
-    public executePhaseAction(phaseAction: PhaseAction) {
+    public isTargetUserAllowableForAction(requestor: User, target: User, roleAction: RoleAction): boolean {
+
+        const requestorIsGood: boolean = requestor.role.alignment === Alignment.GOOD;
+        const requestorIsEvil: boolean = requestor.role.alignment === Alignment.EVIL;
+
+        const targetIsGood: boolean = target.role.alignment === Alignment.GOOD;
+        const targetIsEvil: boolean = target.role.alignment === Alignment.EVIL;
+
+        const requestorAndTargetHaveSameAlignment: boolean = requestor.role.alignment === target.role.alignment;
+
+        const requestorOnlyHasAQuery: boolean = roleAction.requestedQuery && !roleAction.requestedMutation;
+        const requestorAndTargetAreSameUser: boolean = requestor.id === target.id;
+
+        const isKillAction: boolean = roleAction.requestedMutation === ActionMutation.KILL;
+
+        // TODO: Can good queries be made against knowns (mayor/ressed town)?
+        if (requestorOnlyHasAQuery && requestorIsGood) { return true; }
+
+        // TODO: Some roles can self-target (transporter, doc, bg, etc.) - some have separate button to dispatch self-target option
+        if (requestorAndTargetAreSameUser) { return false; }
+
+        // Evils cannot query other evils (Evil same-side query rule)
+        if (requestorOnlyHasAQuery && requestorIsEvil && targetIsEvil) { return false; }
+
+        // Evils cannot attack other evils (Evil same-side attack rule)
+        if (requestorIsEvil && targetIsEvil && isKillAction) { return false; }
+
+        return true;
+    }
+
+    private executePhaseAction(phaseAction: PhaseAction) {
 
         switch (phaseAction.verb) {
             case PhaseVerb.RESOLVE_QUEUED_ACTIONS: {
@@ -79,7 +119,81 @@ export class StackStore {
         }
     }
 
+    private executeStackActionItem(stackActionItem: StackActionItem) {
+
+    }
+
+    private executeActionQuery(stackItem: StackActionItem) {
+        // TODO: Do we want another validity check on the action?
+        let queryResults: any;
+
+        switch (stackItem.action.requestedQuery) {
+            case ActionQuery.ALIGNMENT: {
+                queryResults = stackItem.target.role.alignment;
+                break;
+            }
+            case ActionQuery.ROLE: {
+                // TODO: Fuzzy query vs Accurate query (return role group vs exact role)
+                queryResults = stackItem.target.role.name;
+                break;
+            }
+            case ActionQuery.VISITED: {
+                queryResults = 'NOT IMPLEMENTED - VISITED';
+                break;
+            }
+            case ActionQuery.VISITED_BY: {
+                queryResults = 'NOT IMPLEMENTED - VISITED BY';
+                break;
+            }
+        }
+        // Private message the requestor the information
+        // Server.whisper(stackItem.requestor, queryResults)
+        console.log(`The results of your query: ${queryResults}`);
+    }
+
+    private executeActionMutation(stackItem: StackActionItem): void {
+        // TODO: Do we want another validity check on the action?
+        const { requestor, target, action } = stackItem;
+
+        switch (stackItem.action.requestedMutation) {
+            case ActionMutation.KILL: {
+
+                if (requestor.role.attack > target.role.defense) {
+                    this.userStore.markUserAsDead(stackItem.target);
+                } else {
+                    console.log('Your target was too strong to kill!');
+                }
+
+                break;
+            }
+
+            case ActionMutation.STOP_ACTION: {
+
+                const existingUserActions: StackActionItem[] = this.stack.filter(sa => sa.requestor.id === target.id);
+
+                if (existingUserActions) {
+                    // TODO: Let the target know that they were roleblocked
+                    this.stack = this.stack.filter(sa => sa.requestor.id !== target.id);
+                    console.log(`${target.name} was roleblocked!`);
+                }
+
+                break;
+            }
+
+        }
+    }
+
     private reprioritizeStack(): void {
+
+        const [lowPriorityActions, medPriorityActions, highPriorityActions] = this.separateStackByPriority();
+
+        const reprioritizedStack: StackActionItem[] = [...highPriorityActions, ...medPriorityActions, ...lowPriorityActions];
+
+        this.stack = reprioritizedStack;
+    }
+
+    private separateStackByPriority(): StackActionItem[][] {
+
         const lowPriorityActions: StackActionItem[] = [];
         const medPriorityActions: StackActionItem[] = [];
         const highPriorityActions: StackActionItem[] = [];
@@ -104,9 +218,7 @@ export class StackStore {
             }
         });
 
-        const reprioritizedStack: StackActionItem[] = [...highPriorityActions, ...medPriorityActions, ...lowPriorityActions];
-
-        this.stack = reprioritizedStack;
+        return [lowPriorityActions, medPriorityActions, highPriorityActions];
     }
 
 }

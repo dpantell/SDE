@@ -1,4 +1,4 @@
-import { QUERY_ROLE } from './../models/role-action.interface';
+import { QUERY_ROLE, STOP_ACTION } from './../models/role-action.interface';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { PhaseCategory } from 'src/models/phase.interface';
@@ -23,7 +23,8 @@ export class RoleStore {
         const roles: Role[] = [
             this.getMafiosoRole(),
             this.getSheriffRole(),
-            this.getInvestigatorRole()
+            this.getInvestigatorRole(),
+            this.getEscortRole()
         ];
 
         return roles;
@@ -98,6 +99,32 @@ export class RoleStore {
                     ],
                     actions: [
                         QUERY_ROLE
+                    ]
+                },
+            ],
+            maxActionTargets: 1,
+            winConditions: GOOD_WIN_CONDITION_COLLECTION,
+            queryImmunity: [],
+            mutationImmunity: [],
+            attack: CombatPower.NONE,
+            defense: CombatPower.NONE,
+        };
+    }
+
+    private getEscortRole(): Role {
+        return {
+            icon: '',
+            name: 'Escort',
+            description: '',
+            roleType: RoleType.Support,
+            alignment: Alignment.GOOD,
+            actionMap: [
+                {
+                    phases: [
+                        PhaseCategory.NIGHT
+                    ],
+                    actions: [
+                        STOP_ACTION
                     ]
                 },
             ],

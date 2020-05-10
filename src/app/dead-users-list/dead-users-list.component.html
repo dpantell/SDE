@@ -1,0 +1,11 @@
+<div style="padding-top: 20px;">
+
+    Dead Users:
+
+    <div *ngFor="let dead of userStore?.deadUsers; index as i">
+
+        <span>({{dead.listPosition ? dead.listPosition + 1 : ''}}) {{dead.name}}</span>
+
+    </div>
+
+</div>
