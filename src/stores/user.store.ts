@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Role } from 'src/models/role.interface';
 import { User } from 'src/models/user.interface';
 import { v4 as uuidv4 } from 'uuid';
+import { each } from 'lodash';
 
 @Injectable({ providedIn: 'root' })
 export class UserStore {
@@ -58,6 +59,8 @@ export class UserStore {
             this.generateMockUser(userNames[8], this.roleStore.roles[0]),
             this.generateMockUser(userNames[9]),
         ];
+
+        each(users, (user, index) => { user.listPosition = index; });
 
         return users;
     }

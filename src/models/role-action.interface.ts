@@ -53,8 +53,8 @@ export interface RoleAction {
 
 export const QUEUED_KILL: RoleAction = {
     icon: '',
-    name: 'Queued Kill',
-    description: '',
+    name: 'Kill',
+    description: 'Kill this user',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.LOW,
     requestedMutation: ActionMutation.KILL
@@ -63,7 +63,7 @@ export const QUEUED_KILL: RoleAction = {
 export const IMMEDIATE_KILL: RoleAction = {
     icon: '',
     name: 'Immediate Kill',
-    description: '',
+    description: 'Kill this user',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.LOW,
     requestedMutation: ActionMutation.KILL
@@ -71,8 +71,8 @@ export const IMMEDIATE_KILL: RoleAction = {
 
 export const QUERY_ALIGNMENT: RoleAction = {
     icon: '',
-    name: 'Query Alignment',
-    description: '',
+    name: 'Investigate Alignment',
+    description: 'Investigate to determine the alignment of the user',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.LOW,
     requestedQuery: ActionQuery.ALIGNMENT
@@ -80,8 +80,8 @@ export const QUERY_ALIGNMENT: RoleAction = {
 
 export const QUERY_ROLE: RoleAction = {
     icon: '',
-    name: 'Query Role',
-    description: '',
+    name: 'Investigate Role',
+    description: 'Investigate to determine the role of the user',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.LOW,
     requestedQuery: ActionQuery.ROLE
