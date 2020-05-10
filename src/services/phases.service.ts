@@ -1,7 +1,7 @@
 import { Quantifier } from '../models/enums/quantifier.enum';
 import { PhaseVerb } from '../models/phase.interface';
 import { Injectable } from '@angular/core';
-import { Phase, PhaseCategory, PhaseAction } from 'src/models/phase.interface';
+import { Phase, PhaseCategory } from 'src/models/phase.interface';
 import { PhaseStyle } from 'src/models/enums/phase-style.enum';
 
 @Injectable({ providedIn: 'root' })
@@ -13,7 +13,7 @@ export class PhasesService {
             name: 'Chat',
             style: PhaseStyle.Daylight,
             category: PhaseCategory.DAY,
-            countdownConfig: { leftTime: 8 },
+            countdownConfig: { leftTime: 30, format: 'm:s' },
             beginActions: [],
             endActions: [],
             transitions: []
@@ -23,7 +23,7 @@ export class PhasesService {
             name: 'Nomination',
             style: PhaseStyle.Daylight,
             category: PhaseCategory.DAY,
-            countdownConfig: { leftTime: 7 },
+            countdownConfig: { leftTime: 15, format: 'm:s' },
             beginActions: [],
             endActions: [],
             transitions: []
@@ -33,7 +33,7 @@ export class PhasesService {
             name: 'Stand',
             style: PhaseStyle.Daylight,
             category: PhaseCategory.DAY,
-            countdownConfig: { leftTime: 6 },
+            countdownConfig: { leftTime: 15, format: 'm:s' },
             beginActions: [],
             endActions: [],
             transitions: []
@@ -43,7 +43,7 @@ export class PhasesService {
             name: 'Vote',
             style: PhaseStyle.Daylight,
             category: PhaseCategory.DAY,
-            countdownConfig: { leftTime: 5 },
+            countdownConfig: { leftTime: 15, format: 'm:s' },
             beginActions: [],
             endActions: [],
             transitions: []
@@ -53,7 +53,7 @@ export class PhasesService {
             name: 'Night',
             style: PhaseStyle.StarryNight,
             category: PhaseCategory.NIGHT,
-            countdownConfig: { leftTime: 4 },
+            countdownConfig: { leftTime: 30, format: 'm:s' },
             beginActions: [
                 {
                     verb: PhaseVerb.RESOLVE_QUEUED_ACTIONS,

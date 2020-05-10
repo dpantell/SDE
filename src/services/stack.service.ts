@@ -72,9 +72,15 @@ export class StackService {
 
     public executeActionMutation(stackItem: StackActionItem): void {
         // TODO: Do we want another validity check on the action?
+        const { requestor, target, action } = stackItem;
         switch (stackItem.action.requestedMutation) {
             case ActionMutation.KILL: {
-                this.userStore.markUserAsDead(stackItem.target);
+                if (requestor.role.attack > target.role.defense) {
+                    this.userStore.markUserAsDead(stackItem.target);
+                } else {
+                    console.log('Your target was too strong to kill!');
+                }
+
                 break;
             }
 

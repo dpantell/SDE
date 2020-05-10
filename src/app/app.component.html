@@ -32,7 +32,7 @@
         <div style="height: 30px;">
 
           <span>
-            ({{target.listPosition ? target.listPosition + 1 : i + 1}}) {{target.name}}
+            ({{target.listPosition ? target.listPosition + 1 : i + 1}}) {{target.name}} {{target.id === me.id ? '(' + me.role.name + ')' : ''}}
           </span>
 
           <span *ngFor="let phaseAction of me.role.actionMap">

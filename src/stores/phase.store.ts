@@ -16,7 +16,7 @@ export class PhaseStore {
     @observable private _currentPhase: Phase;
 
     constructor(
-        private getPhasesService: PhasesService,
+        private phasesService: PhasesService,
         private transitionService: TransitionService,
         private stackStore: StackStore
     ) {
@@ -58,7 +58,7 @@ export class PhaseStore {
 
     @action resetState(): void {
 
-        this.phases = this.getPhasesService.getPhases();
+        this.phases = this.phasesService.getPhases();
 
         this._currentPhase = first(this.phases);
 

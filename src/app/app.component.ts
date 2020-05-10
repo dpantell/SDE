@@ -18,7 +18,6 @@ import { CountdownEvent, CountdownStatus, CountdownConfig } from 'ngx-countdown'
 export class AppComponent implements OnInit {
 
   public me: User;
-  public config: CountdownConfig;
 
   constructor(
     public stackStore: StackStore,
@@ -42,7 +41,6 @@ export class AppComponent implements OnInit {
 
     this.me = me;
   }
-
 
   public triggerNextPhase(event: CountdownEvent): void {
     console.log(event);

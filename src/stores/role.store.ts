@@ -45,13 +45,13 @@ export class RoleStore {
                     actions: [
                         QUEUED_KILL
                     ]
-                },
+                }
             ],
             maxActionTargets: 1,
             winConditions: EVIL_WIN_CONDITION_COLLECTION,
             queryImmunity: [],
             mutationImmunity: [],
-            attack: CombatPower.NONE,
+            attack: CombatPower.BASIC,
             defense: CombatPower.NONE,
         };
     }
