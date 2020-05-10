@@ -1,4 +1,4 @@
-import { PhaseActionMap, ActionQuery, ActionMutation } from './role-action.interface';
+import { AllowedAction, ActionQuery, ActionMutation } from './role-action.interface';
 import { RoleType } from './enums/role.enum';
 import { Alignment } from './enums/alignment.enum';
 import { WinCollection } from './win-condition.interface';
@@ -15,7 +15,7 @@ export interface Role {
     description: string;
     roleType: RoleType;
     alignment: Alignment;
-    actionMap: PhaseActionMap[];
+    allowedActions: AllowedAction[];
     maxActionTargets: number;
     winConditions: WinCollection;
     queryImmunity: ActionQuery[];

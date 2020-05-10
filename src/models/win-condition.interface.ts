@@ -4,7 +4,7 @@ import { LogicalOperator } from './enums/logical-operator.enum';
 import { Alignment } from './enums/alignment.enum';
 import { RoleType } from './enums/role.enum';
 import { Descriptor } from './descriptor.interface';
-import { ActorTarget } from './actor-target.interface';
+import { TargetCriteria } from './target-criteria.interface';
 import { ActorState } from './enums/actor-state.enum';
 
 export interface WinCollection {
@@ -20,7 +20,7 @@ export interface NumericComparision {
 export interface WinCondition {
     name: string;
     description: string;
-    target: ActorTarget;
+    target: TargetCriteria;
     condition: WinStateCondition;
 }
 
@@ -90,7 +90,7 @@ export const ALL_NEUTRAL_KILLING_DEAD: WinCondition = {
     target: {
         quantifier: Quantifier.ALL,
         alignment: Alignment.NEUTRAL,
-        role: RoleType.Killing
+        roleType: RoleType.Killing
     },
     condition: ALL_DEAD
 };

@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { StackStore } from 'src/stores/stack.store';
-import { UserStore } from 'src/stores/user.store';
 import { PhaseStore } from 'src/stores/phase.store';
 import { CountdownEvent, CountdownStatus } from 'ngx-countdown';
 
@@ -14,8 +13,7 @@ export class PhaseComponent {
 
     constructor(
         public stackStore: StackStore,
-        public phaseStore: PhaseStore,
-        public userStore: UserStore
+        public phaseStore: PhaseStore
     ) {
     }
 
@@ -23,7 +21,7 @@ export class PhaseComponent {
 
         if (event.status === CountdownStatus.done) {
 
-            setTimeout(() => { this.phaseStore.next(); }, 1000);
+            setTimeout(() => { this.stackStore.performTransition(); }, 1000);
         }
     }
 }

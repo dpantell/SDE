@@ -7,6 +7,7 @@ import { EVIL_WIN_CONDITION_COLLECTION, GOOD_WIN_CONDITION_COLLECTION } from 'sr
 import { RoleType } from 'src/models/enums/role.enum';
 import { Alignment } from 'src/models/enums/alignment.enum';
 import { QUEUED_KILL, QUERY_ALIGNMENT } from 'src/models/role-action.interface';
+import { Quantifier } from 'src/models/enums/quantifier.enum';
 
 @Injectable({ providedIn: 'root' })
 export class RoleStore {
@@ -38,14 +39,18 @@ export class RoleStore {
             description: '',
             roleType: RoleType.Killing,
             alignment: Alignment.EVIL,
-            actionMap: [
+            allowedActions: [
                 {
-                    phases: [
+                    allowablePhases: [
                         PhaseCategory.NIGHT
                     ],
-                    actions: [
-                        QUEUED_KILL
-                    ]
+                    targetCriteria: [
+                        {
+                            quantifier: Quantifier.NONE,
+                            alignment: Alignment.EVIL,
+                        }
+                    ],
+                    action: QUEUED_KILL
                 }
             ],
             maxActionTargets: 1,
@@ -65,14 +70,13 @@ export class RoleStore {
             description: '',
             roleType: RoleType.Invest,
             alignment: Alignment.GOOD,
-            actionMap: [
+            allowedActions: [
                 {
-                    phases: [
+                    allowablePhases: [
                         PhaseCategory.NIGHT
                     ],
-                    actions: [
-                        QUERY_ALIGNMENT
-                    ]
+                    targetCriteria: [],
+                    action: QUERY_ALIGNMENT
                 },
             ],
             maxActionTargets: 1,
@@ -92,14 +96,13 @@ export class RoleStore {
             description: '',
             roleType: RoleType.Invest,
             alignment: Alignment.GOOD,
-            actionMap: [
+            allowedActions: [
                 {
-                    phases: [
+                    allowablePhases: [
                         PhaseCategory.NIGHT
                     ],
-                    actions: [
-                        QUERY_ROLE
-                    ]
+                    targetCriteria: [],
+                    action: QUERY_ROLE
                 },
             ],
             maxActionTargets: 1,
@@ -118,14 +121,13 @@ export class RoleStore {
             description: '',
             roleType: RoleType.Support,
             alignment: Alignment.GOOD,
-            actionMap: [
+            allowedActions: [
                 {
-                    phases: [
+                    allowablePhases: [
                         PhaseCategory.NIGHT
                     ],
-                    actions: [
-                        STOP_ACTION
-                    ]
+                    targetCriteria: [],
+                    action: STOP_ACTION
                 },
             ],
             maxActionTargets: 1,

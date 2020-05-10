@@ -15,24 +15,11 @@
                 {{target.id === userStore.me.id ? '(' + userStore.me.role.name + ')' : ''}}
             </span>
 
-            <span *ngFor="let phaseAction of userStore.myActionMap">
+            <span *ngFor="let action of allowedActionStore.allowedActionsAgainstTarget(target)">
 
-                <!-- If action is enabled during the current phase -->
-                <span *ngIf="isActionEnabledDuringPhase(phaseAction)">
-
-                    <span *ngFor="let action of phaseAction.actions">
-
-                        <!-- If the target for the action is allowable -->
-                        <span *ngIf="stackStore.isTargetUserAllowableForAction(userStore.me, target, action)">
-
-                            <button (click)="stackStore.addActionToStack(userStore.me, target, action)">{{action.name}}
-                            </button>
-
-                        </span>
-
-                    </span>
-
-                </span>
+                <button (click)="stackStore.addActionToStack(userStore.me, target, action)">
+                    {{action.name}}
+                </button>
 
             </span>
 

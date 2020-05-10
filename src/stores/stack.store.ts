@@ -7,13 +7,15 @@ import { User } from 'src/models/user.interface';
 import { PhaseAction, PhaseVerb } from 'src/models/phase.interface';
 import { StackActionItem } from 'src/models/stack-action-item.interface';
 import { UserStore } from './user.store';
-import { Alignment } from 'src/models/enums/alignment.enum';
+import { Transition } from 'src/models/transition.interface';
+import { PhaseStore } from './phase.store';
 
 @Injectable({ providedIn: 'root' })
 export class StackStore {
 
     constructor(
-        private userStore: UserStore
+        private userStore: UserStore,
+        private phaseStore: PhaseStore
     ) {
     }
 
@@ -69,39 +71,18 @@ export class StackStore {
 
     }
 
+    @action performTransition(): void {
+
+        this.executePhaseActions(this.phaseStore.currentPhase.endActions);
+
+        this.phaseStore.next();
+
+        this.executePhaseActions(this.phaseStore.currentPhase.beginActions);
+    }
+
     public executePhaseActions(actions: PhaseAction[]) {
 
         each(actions, phaseAction => this.executePhaseAction(phaseAction));
-    }
-
-    public isTargetUserAllowableForAction(requestor: User, target: User, roleAction: RoleAction): boolean {
-
-        const requestorIsGood: boolean = requestor.role.alignment === Alignment.GOOD;
-        const requestorIsEvil: boolean = requestor.role.alignment === Alignment.EVIL;
-
-        const targetIsGood: boolean = target.role.alignment === Alignment.GOOD;
-        const targetIsEvil: boolean = target.role.alignment === Alignment.EVIL;
-
-        const requestorAndTargetHaveSameAlignment: boolean = requestor.role.alignment === target.role.alignment;
-
-        const requestorOnlyHasAQuery: boolean = roleAction.requestedQuery && !roleAction.requestedMutation;
-        const requestorAndTargetAreSameUser: boolean = requestor.id === target.id;
-
-        const isKillAction: boolean = roleAction.requestedMutation === ActionMutation.KILL;
-
-        // TODO: Can good queries be made against knowns (mayor/ressed town)?
-        if (requestorOnlyHasAQuery && requestorIsGood) { return true; }
-
-        // TODO: Some roles can self-target (transporter, doc, bg, etc.) - some have separate button to dispatch self-target option
-        if (requestorAndTargetAreSameUser) { return false; }
-
-        // Evils cannot query other evils (Evil same-side query rule)
-        if (requestorOnlyHasAQuery && requestorIsEvil && targetIsEvil) { return false; }
-
-        // Evils cannot attack other evils (Evil same-side attack rule)
-        if (requestorIsEvil && targetIsEvil && isKillAction) { return false; }
-
-        return true;
     }
 
     private executePhaseAction(phaseAction: PhaseAction) {

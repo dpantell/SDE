@@ -17,8 +17,7 @@ export class PhaseStore {
 
     constructor(
         private phasesService: PhasesService,
-        private transitionService: TransitionService,
-        private stackStore: StackStore
+        private transitionService: TransitionService
     ) {
     }
 
@@ -57,6 +56,11 @@ export class PhaseStore {
         return find(this.currentPhase.transitions, transition => this.isTransitionReady(transition));
     }
 
+    @computed get firstPhase(): Phase {
+
+        return first(this.phases);
+    }
+
     @computed get styleClass(): string {
 
         switch (this.style) {
@@ -76,31 +80,19 @@ export class PhaseStore {
 
         this.phases = this.phasesService.getPhases();
 
-        this._currentPhase = first(this.phases);
+        this._currentPhase = this.firstPhase;
 
         this._phaseCycleCount = 0;
     }
 
     @action next(): void {
 
-        if (this.availableTransition) {
+        this._currentPhase = find(this.phases, phase => phase.name === this.availableTransition.target);
 
-            this.performTransition(this.availableTransition);
-        }
-    }
-
-    private performTransition(transition: Transition): void {
-
-        this.stackStore.executePhaseActions(this._currentPhase.endActions);
-
-        this._currentPhase = find(this.phases, phase => phase.name === transition.target);
-
-        if (this._currentPhase === first(this.phases)) {
+        if (this.currentPhase === this.firstPhase) {
 
             this._phaseCycleCount++;
         }
-
-        this.stackStore.executePhaseActions(this._currentPhase.beginActions);
     }
 
     private isTransitionReady(transition: Transition): boolean {
