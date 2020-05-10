@@ -10,7 +10,7 @@
       </div>
       <div style="padding-top: 10px;">
         <!-- Timer -->
-        <countdown #cd [config]="phaseStore?.currentPhase?.countdownConfig" (event)="triggerNextPhase($event, 'real')"></countdown>
+        <countdown #cd [config]="phaseStore?.currentPhase?.countdownConfig" (event)="triggerNextPhase($event)"></countdown>
       </div>
 
       <br>
