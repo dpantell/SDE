@@ -22,11 +22,10 @@ export enum ActionMutation {
     PROTECT,
     REDIRECT_ACTION,
     BOOST_STAT,
-    DRAIN_ACTION,
+    DRAIN_STAT,
     STOP_ACTION,
     FORCE_ACTION,
-    CREATE_PRIVATE_CHAT,
-    DRAIN_STAT
+    CREATE_PRIVATE_CHAT
 }
 
 export enum PriorityLevel {
@@ -116,6 +115,7 @@ export const STOP_ACTION: RoleAction = {
     age: 1,
     requestedMutation: ActionMutation.STOP_ACTION
 };
+
 
 
 export const BOOST_DEFENSE_MINOR: BoostAction = {

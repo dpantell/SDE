@@ -210,7 +210,7 @@ export class StackStore {
                     boostAction,
                     {
                         duration: 0,
-                        requestedMutation: ActionMutation.DRAIN_ACTION,
+                        requestedMutation: ActionMutation.DRAIN_STAT,
                         age: boostAction.statDuration
                     }
                 );
