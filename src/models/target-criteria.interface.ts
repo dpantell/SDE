@@ -25,3 +25,9 @@ export const ALL_USERS_NOT_SELF: TargetCriteria[] = [
         quantifier: Quantifier.NOT_SELF,
     },
 ];
+
+export const SELF: TargetCriteria[] = [
+    {
+        quantifier: Quantifier.SELF
+    }
+];

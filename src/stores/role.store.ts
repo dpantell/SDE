@@ -1,6 +1,6 @@
 import { LogicalOperator } from './../models/enums/logical-operator.enum';
-import { TargetCriteria, ALL_USERS_NOT_SELF } from './../models/target-criteria.interface';
-import { QUERY_ROLE, STOP_ACTION } from './../models/role-action.interface';
+import { ALL_USERS_NOT_SELF, SELF } from './../models/target-criteria.interface';
+import { QUERY_ROLE, STOP_ACTION, BOOST_DEFENSE_MINOR } from './../models/role-action.interface';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { PhaseCategory } from 'src/models/phase.interface';
@@ -27,7 +27,35 @@ export class RoleStore {
             this.getMafiosoRole(),
             this.getSheriffRole(),
             this.getInvestigatorRole(),
-            this.getEscortRole()
+            this.getEscortRole(),
+            this.getBodyguardRole()
+            /*
+                Bodyguard
+                    "You die instead of target, whoever tried to kill target dies too"
+
+                    Self Vest
+                        Add Defense +1 for tonight
+
+                    Protect
+                        Redirect Kill action to Self
+                        Add Kill action to Person
+
+                Doctor
+                Vigilante
+                Consig
+
+                Lookout
+                Veteran
+                Jailor
+                Godfather
+
+                Transporter
+                Spy
+                Janitor
+
+                Mayor
+                Medium
+            */
         ];
 
         return roles;
@@ -142,6 +170,44 @@ export class RoleStore {
                         targetCriteria: ALL_USERS_NOT_SELF
                     },
                     action: STOP_ACTION
+                },
+            ],
+            maxActionTargets: 1,
+            winConditions: GOOD_WIN_CONDITION_COLLECTION,
+            queryImmunity: [],
+            mutationImmunity: [],
+            attack: CombatPower.NONE,
+            defense: CombatPower.NONE,
+        };
+    }
+
+    private getBodyguardRole(): Role {
+        return {
+            icon: '',
+            name: 'Bodyguard',
+            description: '',
+            roleType: RoleType.Protective,
+            alignment: Alignment.GOOD,
+            allowedActions: [
+                {
+                    allowablePhases: [
+                        PhaseCategory.NIGHT
+                    ],
+                    targetCollection: {
+                        logicalOperator: LogicalOperator.AND,
+                        targetCriteria: ALL_USERS_NOT_SELF
+                    },
+                    action: STOP_ACTION
+                },
+                {
+                    allowablePhases: [
+                        PhaseCategory.NIGHT
+                    ],
+                    targetCollection: {
+                        logicalOperator: LogicalOperator.AND,
+                        targetCriteria: SELF
+                    },
+                    action: BOOST_DEFENSE_MINOR
                 },
             ],
             maxActionTargets: 1,

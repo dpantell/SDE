@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
-import { RoleAction, PriorityLevel, ActionMutation, ActionQuery } from 'src/models/role-action.interface';
-import { each, partition, isNil, map, filter, find } from 'lodash';
+import { RoleAction, PriorityLevel, ActionMutation, ActionQuery, BOOST_DEFENSE_MINOR, BoostAction as StatAction, Stat, BoostAction } from 'src/models/role-action.interface';
+import { each, partition, isNil, map, filter, find, assign } from 'lodash';
 import { User } from 'src/models/user.interface';
 import { PhaseAction, PhaseVerb } from 'src/models/phase.interface';
 import { StackActionItem } from 'src/models/stack-action-item.interface';
@@ -41,6 +41,7 @@ export class StackStore {
             id: uuidv4(),
             requestor,
             target,
+            age: roleAction.age,
             action: roleAction
         };
 
@@ -61,7 +62,7 @@ export class StackStore {
             // TODO: Figure out why modifying the stack still returns the item
             const hasItem = !isNil(find(this.stack, stackItem => stackItem.id === item.id));
 
-            if (hasItem) {
+            if (hasItem && item.age === 0) {
 
                 this.executeStackActionItem(item);
             }
@@ -87,6 +88,10 @@ export class StackStore {
         switch (phaseAction.verb) {
 
             case PhaseVerb.RESOLVE_QUEUED_ACTIONS: {
+
+                each(this.stack, item => {
+                    item.age--;
+                });
 
                 if (this.stack.length > 0) {
 
@@ -173,6 +178,84 @@ export class StackStore {
                     // TODO: Let the target know that they were roleblocked
                     this.stack = this.stack.filter(sa => sa.requestor.id !== target.id);
                     console.log(`${target.name} was roleblocked!`);
+                }
+
+                break;
+            }
+
+            case ActionMutation.BOOST_STAT: {
+
+                /*
+                    duration: 3,
+                    attack + 1
+                    immed stack
+
+                    duration: 2,
+                    attack + 1
+                    immed stack
+
+                    duration: 0
+                    attack - 1
+
+                    if boost duration not zero
+                        create new dispatched action (counter action)
+                        set drain duration: 0 <- dont counter this later
+                        age: boost duration
+
+                */
+
+                const boostAction = (roleAction as BoostAction);
+
+                const drainStatAction = assign(
+                    boostAction,
+                    {
+                        duration: 0,
+                        requestedMutation: ActionMutation.DRAIN_ACTION,
+                        age: boostAction.statDuration
+                    }
+                );
+
+                const counterStackAction: StackActionItem = {
+                    id: uuidv4(),
+                    requestor,
+                    target,
+                    age: boostAction.age,
+                    action: boostAction
+                };
+
+                switch (boostAction.targetStat) {
+                    case Stat.ATTACK: {
+                        target.role.attack += boostAction.statAmount;
+                        break;
+                    }
+
+                    case Stat.DEFENSE: {
+                        target.role.defense += boostAction.statAmount;
+
+                        this.stack.push(counterStackAction);
+
+                        break;
+                    }
+                }
+
+                break;
+            }
+
+            case ActionMutation.DRAIN_STAT: {
+
+                const statAction = (roleAction as StatAction);
+
+                switch (statAction.targetStat) {
+
+                    case Stat.ATTACK: {
+                        target.role.attack -= statAction.statAmount;
+                        break;
+                    }
+
+                    case Stat.DEFENSE: {
+                        target.role.defense -= statAction.statAmount;
+                        break;
+                    }
                 }
 
                 break;
