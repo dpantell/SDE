@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { RoleAction, PriorityLevel, ActionMutation, ActionQuery } from 'src/models/role-action.interface';
-import { each, partition, isNil } from 'lodash';
+import { each, partition, isNil, map, filter } from 'lodash';
 import { User } from 'src/models/user.interface';
 import { PhaseAction, PhaseVerb } from 'src/models/phase.interface';
 import { StackActionItem } from 'src/models/stack-action-item.interface';
@@ -45,8 +45,6 @@ export class StackStore {
         };
 
         this.stack.push(stackAction);
-
-        this.reprioritizeStack();
     }
 
     @action popStackItem(resolvedItem: StackActionItem): void {
@@ -56,20 +54,9 @@ export class StackStore {
 
     @action resolveStack(): void {
 
-        // TODO: Will this work with Witch? What type of action does she dispatch?
-        const [queries, mutations] = partition(this.stack, stackItem =>
-            !isNil(stackItem.action.requestedQuery) && isNil(stackItem.action.requestedMutation)
-        );
+        const prioritizedStack: StackActionItem[] = this.reprioritizeStack(this.stack);
 
-        // TODO: Separate by priority first, then query/mutation?
-        each(mutations, mutation => { this.executeActionMutation(mutation); this.popStackItem(mutation); });
-
-        each(queries, query => { this.executeActionQuery(query); this.popStackItem(query); });
-
-
-        // const [lowPriorityActions, medPriorityActions, highPriorityActions] = this.separateStackByPriority();
-
-
+        each(prioritizedStack, stackItem => this.executeStackActionItem(stackItem));
     }
 
     @action performTransition(): void {
@@ -89,6 +76,7 @@ export class StackStore {
     private executePhaseAction(phaseAction: PhaseAction) {
 
         switch (phaseAction.verb) {
+
             case PhaseVerb.RESOLVE_QUEUED_ACTIONS: {
 
                 if (this.stack.length > 0) {
@@ -103,6 +91,25 @@ export class StackStore {
 
     private executeStackActionItem(stackActionItem: StackActionItem) {
 
+        // TODO: Will this work with Witch? What type of action does she dispatch?
+
+        const isQuery = !isNil(stackActionItem.action.requestedQuery);
+        const isMutation = !isNil(stackActionItem.action.requestedMutation);
+
+        if (isQuery && isMutation) {
+
+            console.log('Action attempted to be executed, but it has both query and mutation. Not currently supported');
+
+        } else if (isQuery) {
+
+            this.executeActionQuery(stackActionItem);
+
+        } else if (isMutation) {
+
+            this.executeActionMutation(stackActionItem);
+        }
+
+        this.popStackItem(stackActionItem);
     }
 
     private executeActionQuery(stackItem: StackActionItem) {
@@ -165,43 +172,16 @@ export class StackStore {
         }
     }
 
-    private reprioritizeStack(): void {
+    private reprioritizeStack(items: StackActionItem[]): StackActionItem[] {
 
-        const [lowPriorityActions, medPriorityActions, highPriorityActions] = this.separateStackByPriority();
+        const lowPriorityActions = filter(items, item => item.action.priorty === PriorityLevel.LOW || isNil(item.action.priorty));
+        const medPriorityActions = filter(items, item => item.action.priorty === PriorityLevel.MEDIUM);
+        const highPriorityActions = filter(items, item => item.action.priorty === PriorityLevel.HIGH);
 
-        const reprioritizedStack: StackActionItem[] = [...highPriorityActions, ...medPriorityActions, ...lowPriorityActions];
-
-        this.stack = reprioritizedStack;
+        return [
+            ...highPriorityActions,
+            ...medPriorityActions,
+            ...lowPriorityActions,
+        ];
     }
-
-    private separateStackByPriority(): StackActionItem[][] {
-
-        const lowPriorityActions: StackActionItem[] = [];
-        const medPriorityActions: StackActionItem[] = [];
-        const highPriorityActions: StackActionItem[] = [];
-
-        each(this.stack, stackActionItem => {
-            switch (stackActionItem.action.priorty) {
-                case PriorityLevel.LOW: {
-                    lowPriorityActions.push(stackActionItem);
-                    break;
-                }
-                case PriorityLevel.MEDIUM: {
-                    medPriorityActions.push(stackActionItem);
-                    break;
-                }
-                case PriorityLevel.HIGH: {
-                    highPriorityActions.push(stackActionItem);
-                    break;
-                }
-                default: {
-                    lowPriorityActions.push(stackActionItem);
-                }
-            }
-        });
-
-        return [lowPriorityActions, medPriorityActions, highPriorityActions];
-    }
-
 }
-

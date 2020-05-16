@@ -1,5 +1,5 @@
 import { PhaseCategory } from './phase.interface';
-import { TargetCriteria } from './target-criteria.interface';
+import { TargetCriteria, TargetCollection } from './target-criteria.interface';
 
 export enum RoleActionType {
     IMMEDIATE,
@@ -37,7 +37,7 @@ export enum PriorityLevel {
 export interface AllowedAction {
     action: RoleAction;
     allowablePhases: PhaseCategory[];
-    targetCriteria: TargetCriteria[];
+    targetCollection: TargetCollection;
 }
 
 export interface RoleAction {

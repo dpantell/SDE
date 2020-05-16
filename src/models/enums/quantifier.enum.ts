@@ -3,5 +3,6 @@ export enum Quantifier {
     ALL,
     ACCUSED,
     SELF,
+    NOT_SELF,
     TARGETS
 }

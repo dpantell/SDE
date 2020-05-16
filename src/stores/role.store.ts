@@ -1,3 +1,5 @@
+import { LogicalOperator } from './../models/enums/logical-operator.enum';
+import { TargetCriteria, ALL_USERS_NOT_SELF } from './../models/target-criteria.interface';
 import { QUERY_ROLE, STOP_ACTION } from './../models/role-action.interface';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
@@ -44,12 +46,15 @@ export class RoleStore {
                     allowablePhases: [
                         PhaseCategory.NIGHT
                     ],
-                    targetCriteria: [
-                        {
-                            quantifier: Quantifier.NONE,
-                            alignment: Alignment.EVIL,
-                        }
-                    ],
+                    targetCollection: {
+                        logicalOperator: LogicalOperator.OR,
+                        targetCriteria: [
+                            {
+                                quantifier: Quantifier.NONE,
+                                alignment: Alignment.EVIL,
+                            }
+                        ]
+                    },
                     action: QUEUED_KILL
                 }
             ],
@@ -75,20 +80,24 @@ export class RoleStore {
                     allowablePhases: [
                         PhaseCategory.NIGHT
                     ],
-                    targetCriteria: [
-                        {
-                            quantifier: Quantifier.ALL,
-                            alignment: Alignment.GOOD
-                        },
-                        {
-                            quantifier: Quantifier.ALL,
-                            alignment: Alignment.EVIL
-                        },
-                        {
-                            quantifier: Quantifier.ALL,
-                            alignment: Alignment.NEUTRAL
-                        }
-                    ],
+                    // targetCriteria: [
+                    //     {
+                    //         quantifier: Quantifier.ALL,
+                    //         alignment: Alignment.GOOD
+                    //     },
+                    //     {
+                    //         quantifier: Quantifier.ALL,
+                    //         alignment: Alignment.EVIL
+                    //     },
+                    //     {
+                    //         quantifier: Quantifier.ALL,
+                    //         alignment: Alignment.NEUTRAL
+                    //     }
+                    // ],
+                    targetCollection: {
+                        logicalOperator: LogicalOperator.AND,
+                        targetCriteria: ALL_USERS_NOT_SELF
+                    },
                     action: QUERY_ALIGNMENT
                 },
             ],
@@ -114,7 +123,10 @@ export class RoleStore {
                     allowablePhases: [
                         PhaseCategory.NIGHT
                     ],
-                    targetCriteria: [],
+                    targetCollection: {
+                        logicalOperator: LogicalOperator.AND,
+                        targetCriteria: ALL_USERS_NOT_SELF
+                    },
                     action: QUERY_ROLE
                 },
             ],
@@ -139,7 +151,10 @@ export class RoleStore {
                     allowablePhases: [
                         PhaseCategory.NIGHT
                     ],
-                    targetCriteria: [],
+                    targetCollection: {
+                        logicalOperator: LogicalOperator.AND,
+                        targetCriteria: ALL_USERS_NOT_SELF
+                    },
                     action: STOP_ACTION
                 },
             ],

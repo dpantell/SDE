@@ -12,6 +12,16 @@ export interface TargetCriteria {
 }
 
 export interface TargetCollection {
-    operator: LogicalOperator;
-    conditions: TargetCriteria[];
+    logicalOperator: LogicalOperator;
+    targetCriteria: TargetCriteria[];
 }
+
+export const ALL_USERS_NOT_SELF: TargetCriteria[] = [
+    {
+        quantifier: Quantifier.ALL,
+        alignment: Alignment.ANY
+    },
+    {
+        quantifier: Quantifier.NOT_SELF,
+    },
+];
