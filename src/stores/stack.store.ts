@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { RoleAction, PriorityLevel, ActionMutation, ActionQuery } from 'src/models/role-action.interface';
-import { each, partition, isNil, map, filter } from 'lodash';
+import { each, partition, isNil, map, filter, find } from 'lodash';
 import { User } from 'src/models/user.interface';
 import { PhaseAction, PhaseVerb } from 'src/models/phase.interface';
 import { StackActionItem } from 'src/models/stack-action-item.interface';
@@ -54,9 +54,18 @@ export class StackStore {
 
     @action resolveStack(): void {
 
-        const prioritizedStack: StackActionItem[] = this.reprioritizeStack(this.stack);
+        this.stack = this.reprioritizeStack(this.stack);
 
-        each(prioritizedStack, stackItem => this.executeStackActionItem(stackItem));
+        each(this.stack, item => {
+
+            // TODO: Figure out why modifying the stack still returns the item
+            const hasItem = !isNil(find(this.stack, stackItem => stackItem.id === item.id));
+
+            if (hasItem) {
+
+                this.executeStackActionItem(item);
+            }
+        });
     }
 
     @action performTransition(): void {
@@ -142,7 +151,7 @@ export class StackStore {
 
     private executeActionMutation(stackItem: StackActionItem): void {
         // TODO: Do we want another validity check on the action?
-        const { requestor, target, action } = stackItem;
+        const { requestor, target, action: roleAction } = stackItem;
 
         switch (stackItem.action.requestedMutation) {
             case ActionMutation.KILL: {

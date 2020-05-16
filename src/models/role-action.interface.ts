@@ -57,7 +57,7 @@ export const QUEUED_KILL: RoleAction = {
     name: 'Kill',
     description: 'Kill this user',
     type: RoleActionType.QUEUE,
-    priorty: PriorityLevel.LOW,
+    priorty: PriorityLevel.MEDIUM,
     requestedMutation: ActionMutation.KILL
 };
 
@@ -66,7 +66,7 @@ export const IMMEDIATE_KILL: RoleAction = {
     name: 'Immediate Kill',
     description: 'Kill this user',
     type: RoleActionType.QUEUE,
-    priorty: PriorityLevel.LOW,
+    priorty: PriorityLevel.MEDIUM,
     requestedMutation: ActionMutation.KILL
 };
 
