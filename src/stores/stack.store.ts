@@ -30,7 +30,7 @@ export class StackStore {
 
         const existingUserActions: StackActionItem[] = this.stack.filter(sa => sa.requestor.id === requestor.id);
 
-        // TODO: Make sure that forced actions aren't overwritten 
+        // TODO: Make sure that forced actions aren't overwritten
         // (e.g. witch creates action request, user just selects a new target and it's removed)
         // If user already has more existing actions than allowed, remove all previous actions
         if (existingUserActions.length >= requestor.role.maxActionTargets) {

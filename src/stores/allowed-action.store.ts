@@ -128,7 +128,8 @@ export class AllowedActionStore {
 
     private isCriteriaMatch(target: User, criteria: TargetCriteria): boolean {
 
-        const correctAlignment = isNil(criteria.alignment) || (criteria.alignment === target.role.alignment || criteria.alignment === Alignment.ANY);
+        const correctAlignment = isNil(criteria.alignment) ||
+            (criteria.alignment === target.role.alignment || criteria.alignment === Alignment.ANY);
         const correctRoleType = isNil(criteria.roleType) || (criteria.roleType && criteria.roleType === target.role.roleType);
         const correctState = isNil(criteria.state) || (criteria.state && criteria.state === target.role.state);
 
