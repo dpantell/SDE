@@ -66,6 +66,10 @@ export interface BoostAction extends RoleAction {
     statAmount: number;
 }
 
+export interface RedirectAction extends RoleAction {
+
+}
+
 export const QUEUED_KILL: RoleAction = {
     icon: '',
     name: 'Kill',
