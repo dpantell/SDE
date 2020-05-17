@@ -13,7 +13,7 @@ export interface TargetCriteria {
 
 export interface TargetCollection {
     logicalOperator: LogicalOperator;
-    targetCriteria: TargetCriteria[];
+    criteria: TargetCriteria[];
 }
 
 export const ALL_USERS_NOT_SELF: TargetCriteria[] = [

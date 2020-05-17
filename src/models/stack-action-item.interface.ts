@@ -6,5 +6,5 @@ export interface StackActionItem {
     requestor: User;
     target: User;
     action: RoleAction;
-    age: number;
+    delay?: number;
 }

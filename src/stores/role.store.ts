@@ -1,6 +1,6 @@
 import { LogicalOperator } from './../models/enums/logical-operator.enum';
 import { ALL_USERS_NOT_SELF, SELF } from './../models/target-criteria.interface';
-import { QUERY_ROLE, STOP_ACTION, BOOST_DEFENSE_MINOR } from './../models/role-action.interface';
+import { QUERY_ROLE, STOP_ACTION, BOOST_DEFENSE_MINOR, REDIRECT_KILL } from './../models/role-action.interface';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { PhaseCategory } from 'src/models/phase.interface';
@@ -69,24 +69,24 @@ export class RoleStore {
             description: '',
             roleType: RoleType.Killing,
             alignment: Alignment.EVIL,
-            allowedActions: [
+            abilities: [
                 {
-                    allowablePhases: [
+                    allowedPhases: [
                         PhaseCategory.NIGHT
                     ],
-                    targetCollection: {
+                    targets: {
                         logicalOperator: LogicalOperator.OR,
-                        targetCriteria: [
+                        criteria: [
                             {
                                 quantifier: Quantifier.NONE,
                                 alignment: Alignment.EVIL,
                             }
                         ]
                     },
-                    action: QUEUED_KILL
+                    ability: QUEUED_KILL
                 }
             ],
-            maxActionTargets: 1,
+            maxTargets: 1,
             winConditions: EVIL_WIN_CONDITION_COLLECTION,
             queryImmunity: [],
             mutationImmunity: [],
@@ -103,19 +103,19 @@ export class RoleStore {
             description: '',
             roleType: RoleType.Invest,
             alignment: Alignment.GOOD,
-            allowedActions: [
+            abilities: [
                 {
-                    allowablePhases: [
+                    allowedPhases: [
                         PhaseCategory.NIGHT
                     ],
-                    targetCollection: {
+                    targets: {
                         logicalOperator: LogicalOperator.AND,
-                        targetCriteria: ALL_USERS_NOT_SELF
+                        criteria: ALL_USERS_NOT_SELF
                     },
-                    action: QUERY_ALIGNMENT
+                    ability: QUERY_ALIGNMENT
                 },
             ],
-            maxActionTargets: 1,
+            maxTargets: 1,
             winConditions: GOOD_WIN_CONDITION_COLLECTION,
             queryImmunity: [],
             mutationImmunity: [],
@@ -132,19 +132,19 @@ export class RoleStore {
             description: '',
             roleType: RoleType.Invest,
             alignment: Alignment.GOOD,
-            allowedActions: [
+            abilities: [
                 {
-                    allowablePhases: [
+                    allowedPhases: [
                         PhaseCategory.NIGHT
                     ],
-                    targetCollection: {
+                    targets: {
                         logicalOperator: LogicalOperator.AND,
-                        targetCriteria: ALL_USERS_NOT_SELF
+                        criteria: ALL_USERS_NOT_SELF
                     },
-                    action: QUERY_ROLE
+                    ability: QUERY_ROLE
                 },
             ],
-            maxActionTargets: 1,
+            maxTargets: 1,
             winConditions: GOOD_WIN_CONDITION_COLLECTION,
             queryImmunity: [],
             mutationImmunity: [],
@@ -160,19 +160,19 @@ export class RoleStore {
             description: '',
             roleType: RoleType.Support,
             alignment: Alignment.GOOD,
-            allowedActions: [
+            abilities: [
                 {
-                    allowablePhases: [
+                    allowedPhases: [
                         PhaseCategory.NIGHT
                     ],
-                    targetCollection: {
+                    targets: {
                         logicalOperator: LogicalOperator.AND,
-                        targetCriteria: ALL_USERS_NOT_SELF
+                        criteria: ALL_USERS_NOT_SELF
                     },
-                    action: STOP_ACTION
+                    ability: STOP_ACTION
                 },
             ],
-            maxActionTargets: 1,
+            maxTargets: 1,
             winConditions: GOOD_WIN_CONDITION_COLLECTION,
             queryImmunity: [],
             mutationImmunity: [],
@@ -188,29 +188,33 @@ export class RoleStore {
             description: '',
             roleType: RoleType.Protective,
             alignment: Alignment.GOOD,
-            allowedActions: [
+            abilities: [
                 {
-                    allowablePhases: [
+                    allowedPhases: [
                         PhaseCategory.NIGHT
                     ],
-                    targetCollection: {
+                    targets: {
                         logicalOperator: LogicalOperator.AND,
-                        targetCriteria: ALL_USERS_NOT_SELF
+                        criteria: ALL_USERS_NOT_SELF
                     },
-                    action: STOP_ACTION
+                    ability: {
+                        actions: [REDIRECT_KILL]
+                    },
                 },
                 {
-                    allowablePhases: [
+                    allowedPhases: [
                         PhaseCategory.NIGHT
                     ],
-                    targetCollection: {
+                    targets: {
                         logicalOperator: LogicalOperator.AND,
-                        targetCriteria: SELF
+                        criteria: SELF
                     },
-                    action: BOOST_DEFENSE_MINOR
-                },
+                    ability: {
+                        actions: [BOOST_DEFENSE_MINOR]
+                    }
+                }
             ],
-            maxActionTargets: 1,
+            maxTargets: 1,
             winConditions: GOOD_WIN_CONDITION_COLLECTION,
             queryImmunity: [],
             mutationImmunity: [],

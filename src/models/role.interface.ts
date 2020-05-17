@@ -1,4 +1,4 @@
-import { AllowedAction, ActionQuery, ActionMutation } from './role-action.interface';
+import { AllowedAbility, ActionQuery, ActionMutation } from './role-action.interface';
 import { RoleType } from './enums/role.enum';
 import { Alignment } from './enums/alignment.enum';
 import { WinCollection } from './win-condition.interface';
@@ -15,8 +15,8 @@ export interface Role {
     description: string;
     roleType: RoleType;
     alignment: Alignment;
-    allowedActions: AllowedAction[];
-    maxActionTargets: number;
+    abilities: AllowedAbility[];
+    maxTargets: number;
     winConditions: WinCollection;
     queryImmunity: ActionQuery[];
     mutationImmunity: ActionMutation[];

@@ -36,10 +36,14 @@ export enum PriorityLevel {
     HIGHEST
 }
 
-export interface AllowedAction {
-    action: RoleAction;
-    allowablePhases: PhaseCategory[];
-    targetCollection: TargetCollection;
+export interface AllowedAbility {
+    ability: RoleAbility;
+    allowedPhases: PhaseCategory[];
+    targets: TargetCollection;
+}
+
+export interface RoleAbility {
+    actions: RoleAction[];
 }
 
 export interface RoleAction {
@@ -49,10 +53,11 @@ export interface RoleAction {
 
     type: RoleActionType;
     priorty: PriorityLevel;
-    age: number;
+    delay?: number;
 
     requestedQuery?: ActionQuery;
     requestedMutation?: ActionMutation;
+    trigger?: RoleAction;
 }
 
 export enum Stat {
@@ -67,17 +72,18 @@ export interface BoostAction extends RoleAction {
 }
 
 export interface RedirectAction extends RoleAction {
-
+    allowedActions: (ActionQuery | ActionMutation)[];
 }
 
-export const QUEUED_KILL: RoleAction = {
-    icon: '',
-    name: 'Kill',
-    description: 'Kill this user',
-    type: RoleActionType.QUEUE,
-    priorty: PriorityLevel.LOW,
-    age: 1,
-    requestedMutation: ActionMutation.KILL
+export const QUEUED_KILL: RoleAbility = {
+    actions: [{
+        icon: '',
+        name: 'Kill',
+        description: 'Kill this user',
+        type: RoleActionType.QUEUE,
+        priorty: PriorityLevel.LOW,
+        requestedMutation: ActionMutation.KILL
+    }]
 };
 
 export const IMMEDIATE_KILL: RoleAction = {
@@ -86,41 +92,43 @@ export const IMMEDIATE_KILL: RoleAction = {
     description: 'Kill this user',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.LOW,
-    age: 1,
     requestedMutation: ActionMutation.KILL
 };
 
-export const QUERY_ALIGNMENT: RoleAction = {
-    icon: '',
-    name: 'Investigate Alignment',
-    description: 'Investigate to determine the alignment of the user',
-    type: RoleActionType.QUEUE,
-    priorty: PriorityLevel.LOW,
-    age: 1,
-    requestedQuery: ActionQuery.ALIGNMENT
+export const QUERY_ALIGNMENT: RoleAbility = {
+    actions: [{
+        icon: '',
+        name: 'Investigate Alignment',
+        description: 'Investigate to determine the alignment of the user',
+        type: RoleActionType.QUEUE,
+        priorty: PriorityLevel.LOW,
+        requestedQuery: ActionQuery.ALIGNMENT
+    }]
 };
 
-export const QUERY_ROLE: RoleAction = {
-    icon: '',
-    name: 'Investigate Role',
-    description: 'Investigate to determine the role of the user',
-    type: RoleActionType.QUEUE,
-    priorty: PriorityLevel.LOW,
-    age: 1,
-    requestedQuery: ActionQuery.ROLE
+export const QUERY_ROLE: RoleAbility = {
+    actions: [{
+        icon: '',
+        name: 'Investigate Role',
+        description: 'Investigate to determine the role of the user',
+        type: RoleActionType.QUEUE,
+        priorty: PriorityLevel.LOW,
+        requestedQuery: ActionQuery.ROLE
+    }]
 };
 
-export const STOP_ACTION: RoleAction = {
-    icon: '',
-    name: 'Role Block',
-    description: 'Stop the target user from performing their action',
-    type: RoleActionType.QUEUE,
-    priorty: PriorityLevel.HIGH,
-    age: 1,
-    requestedMutation: ActionMutation.STOP_ACTION
+export const STOP_ACTION: RoleAbility = {
+    actions: [{
+        icon: '',
+        name: 'Role Block',
+        description: 'Stop the target user from performing their action',
+        type: RoleActionType.QUEUE,
+        priorty: PriorityLevel.HIGH,
+        requestedMutation: ActionMutation.STOP_ACTION
+    }]
 };
 
-
+// Boost Actions
 
 export const BOOST_DEFENSE_MINOR: BoostAction = {
     icon: '',
@@ -128,7 +136,7 @@ export const BOOST_DEFENSE_MINOR: BoostAction = {
     description: 'Raise defense by 1',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.MEDIUM,
-    age: 1,
+    delay: 1,
     requestedMutation: ActionMutation.BOOST_STAT,
     targetStat: Stat.DEFENSE,
     statAmount: 1,
@@ -141,7 +149,7 @@ export const BOOST_ATTACK_MINOR: BoostAction = {
     description: 'Raise defense by 1',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.MEDIUM,
-    age: 1,
+    delay: 1,
     requestedMutation: ActionMutation.BOOST_STAT,
     targetStat: Stat.ATTACK,
     statAmount: 1,
@@ -154,10 +162,24 @@ export const DRAIN_DEFENSE_MINOR: BoostAction = {
     description: 'Raise defense by 1',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.MEDIUM,
-    age: 1,
+    delay: 1,
     requestedMutation: ActionMutation.DRAIN_STAT,
     targetStat: Stat.DEFENSE,
     statAmount: 1,
     statDuration: 1
+};
+
+// Redirect actions
+
+export const REDIRECT_KILL: RedirectAction = {
+    icon: '',
+    name: 'Redirect Kill',
+    description: 'Redirect Kill',
+    type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.MEDIUM,
+    requestedMutation: ActionMutation.REDIRECT_ACTION,
+    allowedActions: [
+        ActionMutation.KILL
+    ]
 };
 

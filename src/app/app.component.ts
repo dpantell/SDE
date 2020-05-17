@@ -4,7 +4,7 @@ import { PhaseStore } from 'src/stores/phase.store';
 import { RoleStore } from 'src/stores/role.store';
 import { StackStore } from 'src/stores/stack.store';
 import { User } from 'src/models/user.interface';
-import { AllowedAction } from 'src/models/role-action.interface';
+import { AllowedAbility } from 'src/models/role-action.interface';
 
 @Component({
   selector: 'app-root',

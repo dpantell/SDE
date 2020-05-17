@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { StackStore } from 'src/stores/stack.store';
-import { AllowedAction, RoleAction } from 'src/models/role-action.interface';
+import { AllowedAbility, RoleAction } from 'src/models/role-action.interface';
 import { UserStore } from 'src/stores/user.store';
 import { PhaseStore } from 'src/stores/phase.store';
 import { User } from 'src/models/user.interface';
@@ -24,7 +24,7 @@ export class UsersListComponent {
 
         const forcedRequestor = this.userStore.aliveUsers.find(user => user.id === requestorId);
         const forcedTarget = this.userStore.aliveUsers.find(user => user.id === targetId);
-        const forcedRequestorAction = forcedRequestor.role.allowedActions[0].action;
+        const forcedRequestorAction = forcedRequestor.role.abilities[0].ability.actions[0];
 
         this.stackStore.addActionToStack(
             forcedRequestor,

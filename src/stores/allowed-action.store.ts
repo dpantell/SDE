@@ -1,8 +1,8 @@
 import { computed } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { User } from 'src/models/user.interface';
-import { each, includes, filter, map, every, some, isNil } from 'lodash';
-import { AllowedAction, RoleAction } from 'src/models/role-action.interface';
+import { each, includes, filter, map, every, some, isNil, flatten } from 'lodash';
+import { AllowedAbility, RoleAction } from 'src/models/role-action.interface';
 import { TargetCriteria } from 'src/models/target-criteria.interface';
 import { PhaseStore } from './phase.store';
 import { ITransformer, createTransformer } from 'mobx-utils';
@@ -22,19 +22,19 @@ export class AllowedActionStore {
     ) {
     }
 
-    @computed private get allowedActions(): AllowedAction[] {
+    @computed private get allowedActions(): AllowedAbility[] {
 
-        return this.userStore.me.role.allowedActions;
+        return this.userStore.me.role.abilities;
     }
 
-    @computed private get allowedPhaseActions(): AllowedAction[] {
+    @computed private get allowedPhaseActions(): AllowedAbility[] {
 
         return filter(this.allowedActions, allowedAction => this.isActionEnabledInPhase(allowedAction));
     }
 
-    private isActionEnabledInPhase(allowedAction: AllowedAction): boolean {
+    private isActionEnabledInPhase(allowedAction: AllowedAbility): boolean {
 
-        return includes(allowedAction.allowablePhases, this.phaseStore.currentPhase.category);
+        return includes(allowedAction.allowedPhases, this.phaseStore.currentPhase.category);
     }
 
     private allowedTargetActions(): ITransformer<User, RoleAction[]> {
@@ -48,15 +48,15 @@ export class AllowedActionStore {
                 return this.isActionAllowed(allowedAction, target);
             });
 
-            const roleActions = map(allowedActions, allowedAction => allowedAction.action);
+            const roleActions = flatten(map(allowedActions, allowedAction => allowedAction.ability.actions));
 
             return roleActions;
         });
     }
 
-    private isActionAllowed(allowedAction: AllowedAction, target: User): boolean {
+    private isActionAllowed(allowedAction: AllowedAbility, target: User): boolean {
 
-        const { targetCriteria, logicalOperator } = allowedAction.targetCollection;
+        const { criteria: targetCriteria, logicalOperator } = allowedAction.targets;
 
         let result: boolean = false;
 
@@ -84,21 +84,21 @@ export class AllowedActionStore {
 
             case Quantifier.ALL: {
 
-                const isMatch = this.isCriteriaMatch(target, criteria);
+                const isMatch = this.doesCriteriaMatch(target, criteria);
 
                 return isMatch;
             }
 
             case Quantifier.NONE: {
 
-                const isMatch = !this.isCriteriaMatch(target, criteria);
+                const isMatch = !this.doesCriteriaMatch(target, criteria);
 
                 return isMatch;
             }
 
             case Quantifier.ACCUSED: {
 
-                const isMatch = this.isCriteriaMatch(target, criteria);
+                const isMatch = this.doesCriteriaMatch(target, criteria);
 
                 return isMatch;
             }
@@ -119,14 +119,14 @@ export class AllowedActionStore {
 
             case Quantifier.TARGETS: {
 
-                const isMatch = this.isCriteriaMatch(target, criteria);
+                const isMatch = this.doesCriteriaMatch(target, criteria);
 
                 return isMatch;
             }
         }
     }
 
-    private isCriteriaMatch(target: User, criteria: TargetCriteria): boolean {
+    private doesCriteriaMatch(target: User, criteria: TargetCriteria): boolean {
 
         const correctAlignment = isNil(criteria.alignment) ||
             (criteria.alignment === target.role.alignment || criteria.alignment === Alignment.ANY);

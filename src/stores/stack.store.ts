@@ -1,3 +1,4 @@
+import { RedirectAction } from './../models/role-action.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
@@ -8,6 +9,7 @@ import { PhaseAction, PhaseVerb } from 'src/models/phase.interface';
 import { StackActionItem } from 'src/models/stack-action-item.interface';
 import { UserStore } from './user.store';
 import { PhaseStore } from './phase.store';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Injectable({ providedIn: 'root' })
 export class StackStore {
@@ -33,7 +35,7 @@ export class StackStore {
         // TODO: Make sure that forced actions aren't overwritten
         // (e.g. witch creates action request, user just selects a new target and it's removed)
         // If user already has more existing actions than allowed, remove all previous actions
-        if (existingUserActions.length >= requestor.role.maxActionTargets) {
+        if (existingUserActions.length >= requestor.role.maxTargets) {
             this.stack = this.stack.filter(sa => sa.requestor.id !== requestor.id);
         }
 
@@ -41,7 +43,7 @@ export class StackStore {
             id: uuidv4(),
             requestor,
             target,
-            age: roleAction.age,
+            delay: roleAction.delay,
             action: roleAction
         };
 
@@ -60,9 +62,9 @@ export class StackStore {
         each(this.stack, item => {
 
             // TODO: Figure out why modifying the stack still returns the item
-            const hasItem = !isNil(find(this.stack, stackItem => stackItem.id === item.id));
+            const canActionResolve = this.canActionResolve(item);
 
-            if (hasItem && item.age === 0) {
+            if (canActionResolve) {
 
                 this.executeStackActionItem(item);
             }
@@ -83,15 +85,38 @@ export class StackStore {
         each(actions, phaseAction => this.executePhaseAction(phaseAction));
     }
 
+    private canActionResolve(item: StackActionItem): boolean {
+
+        return this.doesActionExist(item)
+            && this.isActionDelayDone(item);
+    }
+
+    private doesActionExist(item: StackActionItem): boolean {
+
+        const hasItem = !isNil(find(this.stack, stackItem => stackItem.id === item.id));
+
+        return hasItem;
+    }
+
+    private isActionDelayDone(item: StackActionItem): boolean {
+
+        if (!isNil(item.delay)) {
+
+            item.delay--;
+
+            return item.delay <= 0;
+
+        } else {
+
+            return true;
+        }
+    }
+
     private executePhaseAction(phaseAction: PhaseAction) {
 
         switch (phaseAction.verb) {
 
             case PhaseVerb.RESOLVE_QUEUED_ACTIONS: {
-
-                each(this.stack, item => {
-                    item.age--;
-                });
 
                 if (this.stack.length > 0) {
 
@@ -183,6 +208,19 @@ export class StackStore {
                 break;
             }
 
+            case ActionMutation.PROTECT: {
+                const killAgainstTarget = this.stack.find(sa =>
+                    sa.target.id === target.id &&
+                    sa.action?.requestedMutation === ActionMutation.KILL
+                );
+
+                if (killAgainstTarget) {
+
+                }
+
+                break;
+            }
+
             case ActionMutation.BOOST_STAT: {
 
                 /*
@@ -219,7 +257,7 @@ export class StackStore {
                     id: uuidv4(),
                     requestor,
                     target,
-                    age: boostAction.age,
+                    delay: boostAction.delay,
                     action: boostAction
                 };
 
@@ -259,6 +297,11 @@ export class StackStore {
                 }
 
                 break;
+            }
+
+            case ActionMutation.REDIRECT_ACTION: {
+                const redirectAction = (roleAction as RedirectAction);
+
             }
 
         }
