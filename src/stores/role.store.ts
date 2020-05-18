@@ -1,6 +1,6 @@
 import { LogicalOperator } from './../models/enums/logical-operator.enum';
 import { ALL_USERS_NOT_SELF, SELF } from './../models/target-criteria.interface';
-import { QUERY_ROLE, STOP_ACTION, BOOST_DEFENSE_MINOR, REDIRECT_KILL } from './../models/role-action.interface';
+import { QUERY_ROLE, STOP_ACTION, BOOST_DEFENSE_MINOR, REDIRECT_KILL, PROTECT, PROTECT_AND_KILL } from './../models/role-action.interface';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { PhaseCategory } from 'src/models/phase.interface';
@@ -31,15 +31,6 @@ export class RoleStore {
             this.getBodyguardRole()
             /*
                 Bodyguard
-                    "You die instead of target, whoever tried to kill target dies too"
-
-                    Self Vest
-                        Add Defense +1 for tonight
-
-                    Protect
-                        Redirect Kill action to Self
-                        Add Kill action to Person
-
                 Doctor
                 Vigilante
                 Consig
@@ -197,9 +188,7 @@ export class RoleStore {
                         logicalOperator: LogicalOperator.AND,
                         criteria: ALL_USERS_NOT_SELF
                     },
-                    ability: {
-                        actions: [REDIRECT_KILL]
-                    },
+                    ability: PROTECT_AND_KILL
                 },
                 {
                     allowedPhases: [
@@ -218,7 +207,7 @@ export class RoleStore {
             winConditions: GOOD_WIN_CONDITION_COLLECTION,
             queryImmunity: [],
             mutationImmunity: [],
-            attack: CombatPower.NONE,
+            attack: CombatPower.UNSTOPPABLE,
             defense: CombatPower.NONE,
         };
     }

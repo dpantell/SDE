@@ -75,15 +75,17 @@ export interface RedirectAction extends RoleAction {
     allowedActions: (ActionQuery | ActionMutation)[];
 }
 
+export const ACTION_QUEUED_KILL = {
+    icon: '',
+    name: 'Kill',
+    description: 'Kill this user',
+    type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.LOW,
+    requestedMutation: ActionMutation.KILL
+};
+
 export const QUEUED_KILL: RoleAbility = {
-    actions: [{
-        icon: '',
-        name: 'Kill',
-        description: 'Kill this user',
-        type: RoleActionType.QUEUE,
-        priorty: PriorityLevel.LOW,
-        requestedMutation: ActionMutation.KILL
-    }]
+    actions: [ACTION_QUEUED_KILL]
 };
 
 export const IMMEDIATE_KILL: RoleAction = {
@@ -125,6 +127,29 @@ export const STOP_ACTION: RoleAbility = {
         type: RoleActionType.QUEUE,
         priorty: PriorityLevel.HIGH,
         requestedMutation: ActionMutation.STOP_ACTION
+    }]
+};
+
+export const PROTECT: RoleAbility = {
+    actions: [{
+        icon: '',
+        name: 'Protect',
+        description: 'Protect the target from dying',
+        type: RoleActionType.QUEUE,
+        priorty: PriorityLevel.MEDIUM,
+        requestedMutation: ActionMutation.PROTECT
+    }]
+};
+
+export const PROTECT_AND_KILL: RoleAbility = {
+    actions: [{
+        icon: '',
+        name: 'Protect',
+        description: 'Protect the target from dying',
+        type: RoleActionType.QUEUE,
+        priorty: PriorityLevel.MEDIUM,
+        requestedMutation: ActionMutation.PROTECT,
+        trigger: ACTION_QUEUED_KILL
     }]
 };
 

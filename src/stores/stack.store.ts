@@ -1,15 +1,13 @@
-import { RedirectAction } from './../models/role-action.interface';
 import { v4 as uuidv4 } from 'uuid';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
-import { RoleAction, PriorityLevel, ActionMutation, ActionQuery, BOOST_DEFENSE_MINOR, BoostAction as StatAction, Stat, BoostAction } from 'src/models/role-action.interface';
-import { each, partition, isNil, map, filter, find, assign } from 'lodash';
+import { RoleAction, PriorityLevel, ActionMutation, ActionQuery, BoostAction as StatAction, Stat, BoostAction } from 'src/models/role-action.interface';
+import { each, isNil, filter, find } from 'lodash';
 import { User } from 'src/models/user.interface';
 import { PhaseAction, PhaseVerb } from 'src/models/phase.interface';
 import { StackActionItem } from 'src/models/stack-action-item.interface';
 import { UserStore } from './user.store';
 import { PhaseStore } from './phase.store';
-import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Injectable({ providedIn: 'root' })
 export class StackStore {
@@ -59,16 +57,32 @@ export class StackStore {
 
         this.stack = this.reprioritizeStack(this.stack);
 
-        each(this.stack, item => {
+        // each(this.stack, item => {
+        //     // TODO: Figure out why modifying the stack still returns the item
+        //     const canActionResolve = this.canActionResolve(item);
 
-            // TODO: Figure out why modifying the stack still returns the item
+        //     if (canActionResolve) {
+
+        //         this.executeStackActionItem(item);
+        //     }
+        // });
+
+        // TODO: Refactor heavily
+        for (let i = 0; i < this.stack.length;) {
+
+            const item = this.stack[i];
+
             const canActionResolve = this.canActionResolve(item);
 
             if (canActionResolve) {
-
                 this.executeStackActionItem(item);
+                i = 0;
+            } else {
+                i++;
             }
-        });
+
+        }
+
     }
 
     @action performTransition(): void {
@@ -183,7 +197,7 @@ export class StackStore {
         // TODO: Do we want another validity check on the action?
         const { requestor, target, action: roleAction } = stackItem;
 
-        switch (stackItem.action.requestedMutation) {
+        switch (roleAction.requestedMutation) {
             case ActionMutation.KILL: {
 
                 if (requestor.role.attack > target.role.defense) {
@@ -216,6 +230,33 @@ export class StackStore {
 
                 if (killAgainstTarget) {
 
+                    this.stack = this.stack.filter(sa => sa.id !== killAgainstTarget.id);
+
+                    if (roleAction.trigger) {
+                        console.log('Protect Action Trigger happened');
+
+                        // Trigger kill on self
+                        const killSelfAction: StackActionItem = {
+                            id: uuidv4(),
+                            requestor: killAgainstTarget.requestor,
+                            target: requestor,
+                            action: roleAction.trigger
+                        };
+
+                        // Trigger kill on requestor
+                        const killAttackerAction: StackActionItem = {
+                            id: uuidv4(),
+                            requestor,
+                            target: killAgainstTarget.requestor,
+                            action: roleAction.trigger
+                        };
+
+                        this.stack.push(killSelfAction);
+                        this.stack.push(killAttackerAction);
+                        this.stack = this.reprioritizeStack(this.stack);
+
+                    }
+                    console.log('You protected your target!');
                 }
 
                 break;
@@ -244,14 +285,6 @@ export class StackStore {
 
                 const boostAction = (roleAction as BoostAction);
 
-                const drainStatAction = assign(
-                    boostAction,
-                    {
-                        duration: 0,
-                        requestedMutation: ActionMutation.DRAIN_STAT,
-                        age: boostAction.statDuration
-                    }
-                );
 
                 const counterStackAction: StackActionItem = {
                     id: uuidv4(),
@@ -300,7 +333,6 @@ export class StackStore {
             }
 
             case ActionMutation.REDIRECT_ACTION: {
-                const redirectAction = (roleAction as RedirectAction);
 
             }
 

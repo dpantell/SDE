@@ -4,11 +4,8 @@ import { Injectable } from '@angular/core';
 import { Role } from 'src/models/role.interface';
 import { User } from 'src/models/user.interface';
 import { v4 as uuidv4 } from 'uuid';
-import { each, includes, first, filter, flatMap, map } from 'lodash';
+import { each, includes, first } from 'lodash';
 import { NameService } from 'src/services/name.service';
-import { AllowedAbility, RoleAction } from 'src/models/role-action.interface';
-import { TargetCriteria } from 'src/models/target-criteria.interface';
-import { ITransformer, createTransformer } from 'mobx-utils';
 
 @Injectable({ providedIn: 'root' })
 export class UserStore {
@@ -62,7 +59,8 @@ export class UserStore {
             // 1 = Sheriff
             // 2 = Investigator
             // 3 = Escort
-            this.generateMockUser(userNames[0], this.roleStore.roles[3]), // Me
+            // 4 = Bodyguard
+            this.generateMockUser(userNames[0], this.roleStore.roles[4]), // Me
             this.generateMockUser(userNames[1]),
             this.generateMockUser(userNames[2]),
             this.generateMockUser(userNames[3]),
@@ -84,7 +82,7 @@ export class UserStore {
         return {
             id: uuidv4(),
             name: userName || this.nameService.generateUserNames(1)[0],
-            role: role || this.roleStore.roles[1]
+            role: role || this.roleStore.roles[1],
         };
     }
 

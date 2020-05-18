@@ -4,7 +4,7 @@
 
     <div style="height: 30px;" *ngFor="let dead of userStore?.deadUsers; index as i">
 
-        <span>({{dead.listPosition ? dead.listPosition + 1 : ''}}) {{dead.name}}</span>
+        <span>({{dead.listPosition + 1 || ''}}) {{dead.name}}</span>
 
     </div>
 
