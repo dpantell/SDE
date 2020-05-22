@@ -14,7 +14,10 @@ export class PhasesService {
             style: PhaseStyle.Daylight,
             category: PhaseCategory.DAY,
             countdownConfig: { leftTime: 30, format: 'm:ss' },
-            beginActions: [],
+            beginActions: [{
+                verb: PhaseVerb.REMOVE_ALL_BOOSTS,
+                quantifier: Quantifier.ALL
+            }],
             endActions: [],
             transitions: []
         };
@@ -24,7 +27,10 @@ export class PhasesService {
             style: PhaseStyle.Daylight,
             category: PhaseCategory.DAY,
             countdownConfig: { leftTime: 15, format: 'm:ss' },
-            beginActions: [],
+            beginActions: [{
+                verb: PhaseVerb.REMOVE_ALL_BOOSTS,
+                quantifier: Quantifier.ALL
+            }],
             endActions: [],
             transitions: []
         };
@@ -34,7 +40,10 @@ export class PhasesService {
             style: PhaseStyle.Daylight,
             category: PhaseCategory.DAY,
             countdownConfig: { leftTime: 15, format: 'm:ss' },
-            beginActions: [],
+            beginActions: [{
+                verb: PhaseVerb.REMOVE_ALL_BOOSTS,
+                quantifier: Quantifier.ALL
+            }],
             endActions: [],
             transitions: []
         };
@@ -44,7 +53,10 @@ export class PhasesService {
             style: PhaseStyle.Daylight,
             category: PhaseCategory.DAY,
             countdownConfig: { leftTime: 15, format: 'm:ss' },
-            beginActions: [],
+            beginActions: [{
+                verb: PhaseVerb.REMOVE_ALL_BOOSTS,
+                quantifier: Quantifier.ALL
+            }],
             endActions: [],
             transitions: []
         };
@@ -57,6 +69,10 @@ export class PhasesService {
             beginActions: [
                 {
                     verb: PhaseVerb.RESOLVE_QUEUED_ACTIONS,
+                    quantifier: Quantifier.ALL
+                },
+                {
+                    verb: PhaseVerb.REMOVE_ALL_BOOSTS,
                     quantifier: Quantifier.ALL
                 }
             ],

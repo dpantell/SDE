@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { Role } from 'src/models/role.interface';
 import { User } from 'src/models/user.interface';
 import { v4 as uuidv4 } from 'uuid';
-import { each, includes, first } from 'lodash';
+import { each, includes, first, cloneDeep } from 'lodash';
 import { NameService } from 'src/services/name.service';
 
 @Injectable({ providedIn: 'root' })
@@ -41,6 +41,18 @@ export class UserStore {
     @action markUserAsDead(deadUser: User): void {
 
         this.deadUserIds.push(deadUser.id);
+    }
+
+    @action resetAllUserStats(): void {
+
+        each(this.users, user => this.resetUser(user));
+    }
+
+    private resetUser(user: User): void {
+
+        const defaultRole = cloneDeep(this.roleStore.DEFAULT_ROLE_MAP.get(user.role.name));
+
+        user.role = defaultRole;
     }
 
     private isUserDead(user: User): boolean {

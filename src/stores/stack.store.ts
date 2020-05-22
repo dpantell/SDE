@@ -57,17 +57,6 @@ export class StackStore {
 
         this.stack = this.reprioritizeStack(this.stack);
 
-        // each(this.stack, item => {
-        //     // TODO: Figure out why modifying the stack still returns the item
-        //     const canActionResolve = this.canActionResolve(item);
-
-        //     if (canActionResolve) {
-
-        //         this.executeStackActionItem(item);
-        //     }
-        // });
-
-        // TODO: Refactor heavily
         for (let i = 0; i < this.stack.length;) {
 
             const item = this.stack[i];
@@ -136,6 +125,14 @@ export class StackStore {
 
                     this.resolveStack();
                 }
+                break;
+            }
+            case PhaseVerb.REMOVE_ALL_BOOSTS: {
+
+                // TODO: Only reset stats on any characters who are currently boosted
+                // TODO: Handle boost duration by decrementing duration and only clearing when duration = 0
+                this.userStore.resetAllUserStats();
+
                 break;
             }
             default: return;
@@ -264,47 +261,18 @@ export class StackStore {
 
             case ActionMutation.BOOST_STAT: {
 
-                /*
-                    duration: 3,
-                    attack + 1
-                    immed stack
-
-                    duration: 2,
-                    attack + 1
-                    immed stack
-
-                    duration: 0
-                    attack - 1
-
-                    if boost duration not zero
-                        create new dispatched action (counter action)
-                        set drain duration: 0 <- dont counter this later
-                        age: boost duration
-
-                */
-
                 const boostAction = (roleAction as BoostAction);
-
-
-                const counterStackAction: StackActionItem = {
-                    id: uuidv4(),
-                    requestor,
-                    target,
-                    delay: boostAction.delay,
-                    action: boostAction
-                };
 
                 switch (boostAction.targetStat) {
                     case Stat.ATTACK: {
+
                         target.role.attack += boostAction.statAmount;
                         break;
                     }
 
                     case Stat.DEFENSE: {
+
                         target.role.defense += boostAction.statAmount;
-
-                        this.stack.push(counterStackAction);
-
                         break;
                     }
                 }

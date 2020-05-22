@@ -16,7 +16,8 @@ export enum PhaseVerb {
     UNMUTE,
     KILL,
     RESURRECT,
-    RESOLVE_QUEUED_ACTIONS
+    RESOLVE_QUEUED_ACTIONS,
+    REMOVE_ALL_BOOSTS
 }
 
 export interface PhaseAction {

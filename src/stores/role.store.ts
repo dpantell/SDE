@@ -10,15 +10,24 @@ import { RoleType } from 'src/models/enums/role.enum';
 import { Alignment } from 'src/models/enums/alignment.enum';
 import { QUEUED_KILL, QUERY_ALIGNMENT } from 'src/models/role-action.interface';
 import { Quantifier } from 'src/models/enums/quantifier.enum';
+import { cloneDeep, each } from 'lodash';
 
 @Injectable({ providedIn: 'root' })
 export class RoleStore {
+
+    @observable public DEFAULT_ROLE_MAP: Map<string, Role>;
 
     @observable public roles: Role[];
 
     @action resetState(): void {
 
-        this.roles = this.getRoles();
+        const roles = this.getRoles();
+
+        this.roles = [...roles];
+
+        this.DEFAULT_ROLE_MAP = new Map<string, Role>();
+
+        each([...roles], role => this.DEFAULT_ROLE_MAP.set(role.name, cloneDeep(role)));
     }
 
     private getRoles(): Role[] {
