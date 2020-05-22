@@ -1,7 +1,7 @@
 import { observable, action, computed } from 'mobx-angular';
 import { Injectable } from '@angular/core';
-import { Phase } from 'src/models/phase.interface';
-import { find, every, first } from 'lodash';
+import { Phase, PhaseCategory } from 'src/models/phase.interface';
+import { find, every, first, filter, map } from 'lodash';
 import { PhasesService } from 'src/services/phases.service';
 import { PhaseStyle } from 'src/models/enums/phase-style.enum';
 import { Transition } from 'src/models/transition.interface';
@@ -18,6 +18,26 @@ export class PhaseStore {
         private phasesService: PhasesService,
         private transitionService: TransitionService
     ) {
+    }
+
+    @computed get nightPhaseNames(): string[] {
+
+        return map(this.nightPhases, phase => phase.name);
+    }
+
+    @computed get nightPhases(): Phase[] {
+
+        return filter(this.phases, phase => phase.category === PhaseCategory.NIGHT);
+    }
+
+    @computed get dayPhaseNames(): string[] {
+
+        return map(this.dayPhases, phase => phase.name);
+    }
+
+    @computed get dayPhases(): Phase[] {
+
+        return filter(this.phases, phase => phase.category === PhaseCategory.DAY);
     }
 
     @computed get cycleMessage(): string {

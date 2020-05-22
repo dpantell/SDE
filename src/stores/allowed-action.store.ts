@@ -34,7 +34,19 @@ export class AllowedActionStore {
 
     private isActionEnabledInPhase(allowedAction: AllowedAbility): boolean {
 
-        return includes(allowedAction.allowedPhases, this.phaseStore.currentPhase.category);
+        const isCurrentPhaseNameAllowed = includes(allowedAction.phases.phaseNames, this.phaseStore.currentPhase.name);
+
+        if (allowedAction.phases.enabledPhaseCycleCount) {
+
+            const count = this.phaseStore.phaseCycleCount;
+            const { start, repeat } = allowedAction.phases.enabledPhaseCycleCount;
+
+            return isCurrentPhaseNameAllowed
+                && count >= start
+                && (count - start) % repeat === 0;
+        }
+
+        return isCurrentPhaseNameAllowed;
     }
 
     private allowedTargetActions(): ITransformer<User, RoleAction[]> {
@@ -73,12 +85,6 @@ export class AllowedActionStore {
     }
 
     private isCriteriaMet(target: User, criteria: TargetCriteria): boolean {
-
-        // if it's 0 (none), none of the things can match
-        // if it's all, all of the things must match
-        // if it's accused, the accused must match all of these things
-        // if it's self, *me* must match all of these things
-        // if it's targets, somehow get my targets and make sure the target id matches all
 
         switch (criteria.quantifier) {
 

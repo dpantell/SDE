@@ -1,5 +1,5 @@
-import { PhaseCategory } from './phase.interface';
-import { TargetCriteria, TargetCollection } from './target-criteria.interface';
+import { PhaseCriteria } from './phase.interface';
+import { TargetCollection } from './target-criteria.interface';
 
 export enum RoleActionType {
     IMMEDIATE,
@@ -38,7 +38,8 @@ export enum PriorityLevel {
 
 export interface AllowedAbility {
     ability: RoleAbility;
-    allowedPhases: PhaseCategory[];
+    abilityName?: string;
+    phases: PhaseCriteria;
     targets: TargetCollection;
 }
 
@@ -84,8 +85,21 @@ export const ACTION_QUEUED_KILL = {
     requestedMutation: ActionMutation.KILL
 };
 
+export const PROTECT_ACTION: RoleAction = {
+    icon: '',
+    name: 'Protect',
+    description: 'Protect the target from dying',
+    type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.MEDIUM,
+    requestedMutation: ActionMutation.PROTECT
+};
+
 export const QUEUED_KILL: RoleAbility = {
     actions: [ACTION_QUEUED_KILL]
+};
+
+export const PROTECT: RoleAbility = {
+    actions: [PROTECT_ACTION]
 };
 
 export const IMMEDIATE_KILL: RoleAction = {
@@ -130,17 +144,6 @@ export const STOP_ACTION: RoleAbility = {
     }]
 };
 
-export const PROTECT: RoleAbility = {
-    actions: [{
-        icon: '',
-        name: 'Protect',
-        description: 'Protect the target from dying',
-        type: RoleActionType.QUEUE,
-        priorty: PriorityLevel.MEDIUM,
-        requestedMutation: ActionMutation.PROTECT
-    }]
-};
-
 export const PROTECT_AND_KILL: RoleAbility = {
     actions: [{
         icon: '',
@@ -152,6 +155,8 @@ export const PROTECT_AND_KILL: RoleAbility = {
         trigger: ACTION_QUEUED_KILL
     }]
 };
+
+
 
 // Boost Actions
 

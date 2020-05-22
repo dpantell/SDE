@@ -7,8 +7,6 @@ import { CountdownConfig } from 'ngx-countdown';
 export enum PhaseCategory {
     DAY,
     NIGHT,
-    SUNSET,
-    SUNRISE
 }
 
 export enum PhaseVerb {
@@ -24,6 +22,16 @@ export interface PhaseAction {
     verb: PhaseVerb;
     alignment?: Alignment;
     quantifier: Quantifier;
+}
+
+export interface EnabledPhaseCycleCount {
+    start: number;
+    repeat: number;
+}
+
+export interface PhaseCriteria {
+    phaseNames: string[];
+    enabledPhaseCycleCount?: EnabledPhaseCycleCount;
 }
 
 export interface Phase {

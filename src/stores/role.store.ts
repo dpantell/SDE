@@ -1,9 +1,8 @@
 import { LogicalOperator } from './../models/enums/logical-operator.enum';
 import { ALL_USERS_NOT_SELF, SELF } from './../models/target-criteria.interface';
-import { QUERY_ROLE, STOP_ACTION, BOOST_DEFENSE_MINOR, REDIRECT_KILL, PROTECT, PROTECT_AND_KILL } from './../models/role-action.interface';
+import { QUERY_ROLE, STOP_ACTION, BOOST_DEFENSE_MINOR, PROTECT, PROTECT_AND_KILL } from './../models/role-action.interface';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
-import { PhaseCategory } from 'src/models/phase.interface';
 import { Role, CombatPower } from 'src/models/role.interface';
 import { EVIL_WIN_CONDITION_COLLECTION, GOOD_WIN_CONDITION_COLLECTION } from 'src/models/win-condition.interface';
 import { RoleType } from 'src/models/enums/role.enum';
@@ -11,9 +10,15 @@ import { Alignment } from 'src/models/enums/alignment.enum';
 import { QUEUED_KILL, QUERY_ALIGNMENT } from 'src/models/role-action.interface';
 import { Quantifier } from 'src/models/enums/quantifier.enum';
 import { cloneDeep, each } from 'lodash';
+import { PhaseStore } from './phase.store';
 
 @Injectable({ providedIn: 'root' })
 export class RoleStore {
+
+    constructor(
+        private phaseStore: PhaseStore,
+    ) {
+    }
 
     @observable public DEFAULT_ROLE_MAP: Map<string, Role>;
 
@@ -37,11 +42,10 @@ export class RoleStore {
             this.getSheriffRole(),
             this.getInvestigatorRole(),
             this.getEscortRole(),
-            this.getBodyguardRole()
+            this.getBodyguardRole(), // needs ability limit
+            this.getDoctorRole(), // needs ability limit
+            this.getVigilanteRole() // needs ability limit
             /*
-                Bodyguard
-                Doctor
-                Vigilante
                 Consig
 
                 Lookout
@@ -71,9 +75,9 @@ export class RoleStore {
             alignment: Alignment.EVIL,
             abilities: [
                 {
-                    allowedPhases: [
-                        PhaseCategory.NIGHT
-                    ],
+                    phases: {
+                        phaseNames: this.phaseStore.nightPhaseNames,
+                    },
                     targets: {
                         logicalOperator: LogicalOperator.OR,
                         criteria: [
@@ -105,9 +109,9 @@ export class RoleStore {
             alignment: Alignment.GOOD,
             abilities: [
                 {
-                    allowedPhases: [
-                        PhaseCategory.NIGHT
-                    ],
+                    phases: {
+                        phaseNames: this.phaseStore.nightPhaseNames,
+                    },
                     targets: {
                         logicalOperator: LogicalOperator.AND,
                         criteria: ALL_USERS_NOT_SELF
@@ -134,9 +138,9 @@ export class RoleStore {
             alignment: Alignment.GOOD,
             abilities: [
                 {
-                    allowedPhases: [
-                        PhaseCategory.NIGHT
-                    ],
+                    phases: {
+                        phaseNames: this.phaseStore.nightPhaseNames,
+                    },
                     targets: {
                         logicalOperator: LogicalOperator.AND,
                         criteria: ALL_USERS_NOT_SELF
@@ -162,9 +166,9 @@ export class RoleStore {
             alignment: Alignment.GOOD,
             abilities: [
                 {
-                    allowedPhases: [
-                        PhaseCategory.NIGHT
-                    ],
+                    phases: {
+                        phaseNames: this.phaseStore.nightPhaseNames,
+                    },
                     targets: {
                         logicalOperator: LogicalOperator.AND,
                         criteria: ALL_USERS_NOT_SELF
@@ -190,9 +194,9 @@ export class RoleStore {
             alignment: Alignment.GOOD,
             abilities: [
                 {
-                    allowedPhases: [
-                        PhaseCategory.NIGHT
-                    ],
+                    phases: {
+                        phaseNames: this.phaseStore.nightPhaseNames,
+                    },
                     targets: {
                         logicalOperator: LogicalOperator.AND,
                         criteria: ALL_USERS_NOT_SELF
@@ -200,9 +204,9 @@ export class RoleStore {
                     ability: PROTECT_AND_KILL
                 },
                 {
-                    allowedPhases: [
-                        PhaseCategory.NIGHT
-                    ],
+                    phases: {
+                        phaseNames: this.phaseStore.nightPhaseNames,
+                    },
                     targets: {
                         logicalOperator: LogicalOperator.AND,
                         criteria: SELF
@@ -220,4 +224,78 @@ export class RoleStore {
             defense: CombatPower.NONE,
         };
     }
+
+    private getDoctorRole(): Role {
+        return {
+            icon: '',
+            name: 'Doctor',
+            description: '',
+            roleType: RoleType.Protective,
+            alignment: Alignment.GOOD,
+            abilities: [
+                {
+                    phases: {
+                        phaseNames: this.phaseStore.nightPhaseNames,
+                    },
+                    targets: {
+                        logicalOperator: LogicalOperator.AND,
+                        criteria: ALL_USERS_NOT_SELF
+                    },
+                    ability: PROTECT
+                },
+                {
+                    phases: {
+                        phaseNames: this.phaseStore.nightPhaseNames,
+                    },
+                    targets: {
+                        logicalOperator: LogicalOperator.AND,
+                        criteria: SELF
+                    },
+                    ability: {
+                        actions: [BOOST_DEFENSE_MINOR]
+                    }
+                }
+            ],
+            maxTargets: 1,
+            winConditions: GOOD_WIN_CONDITION_COLLECTION,
+            queryImmunity: [],
+            mutationImmunity: [],
+            attack: CombatPower.NONE,
+            defense: CombatPower.NONE,
+        };
+    }
+
+    private getVigilanteRole(): Role {
+
+        return {
+            icon: '',
+            name: 'Vigilante',
+            description: '',
+            roleType: RoleType.Killing,
+            alignment: Alignment.GOOD,
+            abilities: [
+                {
+                    phases: {
+                        phaseNames: this.phaseStore.nightPhaseNames,
+                        enabledPhaseCycleCount: {
+                            start: 1,
+                            repeat: 1
+                        }
+                    },
+                    targets: {
+                        logicalOperator: LogicalOperator.AND,
+                        criteria: ALL_USERS_NOT_SELF
+                    },
+                    ability: QUEUED_KILL
+                }
+            ],
+            maxTargets: 1,
+            winConditions: GOOD_WIN_CONDITION_COLLECTION,
+            queryImmunity: [],
+            mutationImmunity: [],
+            attack: CombatPower.BASIC,
+            defense: CombatPower.NONE,
+        };
+    }
+
 }
