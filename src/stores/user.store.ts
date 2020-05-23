@@ -75,7 +75,8 @@ export class UserStore {
             // 5 = Doctor
             // 6 = Vigi
             // 7 = Consig
-            this.generateMockUser(userNames[0], this.roleStore.roles[7]), // Me
+            // 8 = Lookout
+            this.generateMockUser(userNames[0], this.roleStore.roles[8]), // Me
             this.generateMockUser(userNames[1], this.roleStore.roles[4]),
             this.generateMockUser(userNames[2]),
             this.generateMockUser(userNames[3]),

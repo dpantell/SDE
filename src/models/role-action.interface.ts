@@ -76,7 +76,8 @@ export interface RedirectAction extends RoleAction {
     allowedActions: (ActionQuery | ActionMutation)[];
 }
 
-export const ACTION_QUEUED_KILL = {
+// Actions
+export const QUEUED_KILL_ACTION = {
     icon: '',
     name: 'Kill',
     description: 'Kill this user',
@@ -94,72 +95,62 @@ export const PROTECT_ACTION: RoleAction = {
     requestedMutation: ActionMutation.PROTECT
 };
 
-export const QUEUED_KILL: RoleAbility = {
-    actions: [ACTION_QUEUED_KILL]
-};
-
-export const PROTECT: RoleAbility = {
-    actions: [PROTECT_ACTION]
-};
-
-export const IMMEDIATE_KILL: RoleAction = {
+export const IMMEDIATE_KILL_ACTION: RoleAction = {
     icon: '',
     name: 'Immediate Kill',
-    description: 'Kill this user',
+    description: 'Kill this target',
     type: RoleActionType.QUEUE,
     priorty: PriorityLevel.LOW,
     requestedMutation: ActionMutation.KILL
 };
 
-export const QUERY_ALIGNMENT: RoleAbility = {
-    actions: [{
-        icon: '',
-        name: 'Investigate Alignment',
-        description: 'Investigate to determine the alignment of the user',
-        type: RoleActionType.QUEUE,
-        priorty: PriorityLevel.LOW,
-        requestedQuery: ActionQuery.ALIGNMENT
-    }]
+export const QUERY_ALIGNMENT_ACTION: RoleAction = {
+    icon: '',
+    name: 'Investigate Alignment',
+    description: 'Investigate to determine the alignment of the target',
+    type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.LOW,
+    requestedQuery: ActionQuery.ALIGNMENT
 };
 
-export const QUERY_ROLE: RoleAbility = {
-    actions: [{
-        icon: '',
-        name: 'Investigate Role',
-        description: 'Investigate to determine the role of the user',
-        type: RoleActionType.QUEUE,
-        priorty: PriorityLevel.LOW,
-        requestedQuery: ActionQuery.ROLE
-    }]
+export const QUERY_ROLE_ACTION: RoleAction = {
+    icon: '',
+    name: 'Investigate Role',
+    description: 'Investigate to determine the role of the target',
+    type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.LOW,
+    requestedQuery: ActionQuery.ROLE
 };
 
-export const STOP_ACTION: RoleAbility = {
-    actions: [{
-        icon: '',
-        name: 'Role Block',
-        description: 'Stop the target user from performing their action',
-        type: RoleActionType.QUEUE,
-        priorty: PriorityLevel.HIGH,
-        requestedMutation: ActionMutation.STOP_ACTION
-    }]
+export const QUERY_VISITED_BY_ACTION: RoleAction = {
+    icon: '',
+    name: 'Investigate Visited By',
+    description: 'Discover all users who visited your target',
+    type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.LOWEST,
+    requestedQuery: ActionQuery.VISITED_BY
 };
 
-export const PROTECT_AND_KILL: RoleAbility = {
-    actions: [{
-        icon: '',
-        name: 'Protect',
-        description: 'Protect the target from dying',
-        type: RoleActionType.QUEUE,
-        priorty: PriorityLevel.MEDIUM,
-        requestedMutation: ActionMutation.PROTECT,
-        trigger: ACTION_QUEUED_KILL
-    }]
+export const PROTECT_AND_KILL_ACTION: RoleAction = {
+    icon: '',
+    name: 'Protect',
+    description: 'Protect the target from dying',
+    type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.MEDIUM,
+    requestedMutation: ActionMutation.PROTECT,
+    trigger: QUEUED_KILL_ACTION
 };
 
-
+export const ROLE_BLOCK_ACTION: RoleAction = {
+    icon: '',
+    name: 'Role Block',
+    description: 'Stop the target user from performing their action',
+    type: RoleActionType.QUEUE,
+    priorty: PriorityLevel.HIGH,
+    requestedMutation: ActionMutation.STOP_ACTION
+};
 
 // Boost Actions
-
 export const BOOST_DEFENSE_MINOR: BoostAction = {
     icon: '',
     name: 'Boost Defense minor',
@@ -200,7 +191,6 @@ export const DRAIN_DEFENSE_MINOR: BoostAction = {
 };
 
 // Redirect actions
-
 export const REDIRECT_KILL: RedirectAction = {
     icon: '',
     name: 'Redirect Kill',
@@ -212,4 +202,35 @@ export const REDIRECT_KILL: RedirectAction = {
         ActionMutation.KILL
     ]
 };
+
+
+// Abilities
+export const QUEUED_KILL: RoleAbility = {
+    actions: [QUEUED_KILL_ACTION]
+};
+
+export const PROTECT: RoleAbility = {
+    actions: [PROTECT_ACTION]
+};
+
+export const QUERY_ALIGNMENT: RoleAbility = {
+    actions: [QUERY_ALIGNMENT_ACTION]
+};
+
+export const QUERY_ROLE: RoleAbility = {
+    actions: [QUERY_ROLE_ACTION]
+};
+
+export const STOP_ACTION: RoleAbility = {
+    actions: [ROLE_BLOCK_ACTION]
+};
+
+export const PROTECT_AND_KILL: RoleAbility = {
+    actions: [PROTECT_AND_KILL_ACTION]
+};
+
+export const QUERY_VISITED_BY: RoleAbility = {
+    actions: [QUERY_VISITED_BY_ACTION]
+};
+
 

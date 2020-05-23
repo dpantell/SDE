@@ -15,13 +15,14 @@ export enum PhaseVerb {
     KILL,
     RESURRECT,
     RESOLVE_QUEUED_ACTIONS,
-    REMOVE_ALL_BOOSTS
+    REMOVE_ALL_BOOSTS,
+    CLEAR_EXECUTED_STACK
 }
 
 export interface PhaseAction {
     verb: PhaseVerb;
     alignment?: Alignment;
-    quantifier: Quantifier;
+    quantifier?: Quantifier;
 }
 
 export interface EnabledPhaseCycleCount {

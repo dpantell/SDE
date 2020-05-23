@@ -1,6 +1,6 @@
 import { LogicalOperator } from './../models/enums/logical-operator.enum';
-import { ALL_USERS_NOT_SELF, SELF } from './../models/target-criteria.interface';
-import { QUERY_ROLE, STOP_ACTION, BOOST_DEFENSE_MINOR, PROTECT, PROTECT_AND_KILL } from './../models/role-action.interface';
+import { ALL_USERS_NOT_SELF, SELF, ALL_USERS } from './../models/target-criteria.interface';
+import { QUERY_ROLE, STOP_ACTION, BOOST_DEFENSE_MINOR, PROTECT, QUERY_VISITED_BY, PROTECT_AND_KILL } from './../models/role-action.interface';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { Role, CombatPower } from 'src/models/role.interface';
@@ -45,7 +45,8 @@ export class RoleStore {
             this.getBodyguardRole(), // needs ability limit
             this.getDoctorRole(), // needs ability limit
             this.getVigilanteRole(), // needs ability limit
-            this.getConsigliereRole()
+            this.getConsigliereRole(),
+            this.getLookoutRole()
             /*
                 Lookout
                 Veteran
@@ -330,5 +331,35 @@ export class RoleStore {
             defense: CombatPower.NONE,
         };
     }
+
+    private getLookoutRole(): Role {
+
+        return {
+            icon: '',
+            name: 'Lookout',
+            description: '',
+            roleType: RoleType.Invest,
+            alignment: Alignment.GOOD,
+            abilities: [
+                {
+                    phases: {
+                        phaseNames: this.phaseStore.nightPhaseNames,
+                    },
+                    targets: {
+                        logicalOperator: LogicalOperator.AND,
+                        criteria: ALL_USERS
+                    },
+                    ability: QUERY_VISITED_BY
+                },
+            ],
+            maxTargets: 1,
+            winConditions: GOOD_WIN_CONDITION_COLLECTION,
+            queryImmunity: [],
+            mutationImmunity: [],
+            attack: CombatPower.NONE,
+            defense: CombatPower.NONE,
+        };
+    }
+
 
 }

@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { observable, action } from 'mobx-angular';
 import { Injectable } from '@angular/core';
 import { RoleAction, PriorityLevel, ActionMutation, ActionQuery, BoostAction as StatAction, Stat, BoostAction } from 'src/models/role-action.interface';
-import { each, isNil, filter, find } from 'lodash';
+import { each, isNil, filter, find, map, includes, sortBy, reverse, cloneDeep } from 'lodash';
 import { User } from 'src/models/user.interface';
 import { PhaseAction, PhaseVerb } from 'src/models/phase.interface';
 import { StackActionItem } from 'src/models/stack-action-item.interface';
@@ -19,10 +19,12 @@ export class StackStore {
     }
 
     @observable public stack: StackActionItem[];
+    @observable private executedStack: StackActionItem[];
 
     @action resetState(): void {
 
         this.stack = [];
+        this.executedStack = [];
     }
 
     @action addActionToStack(requestor: User, target: User, roleAction: RoleAction): void {
@@ -34,7 +36,7 @@ export class StackStore {
         // (e.g. witch creates action request, user just selects a new target and it's removed)
         // If user already has more existing actions than allowed, remove all previous actions
         if (existingUserActions.length >= requestor.role.maxTargets) {
-            this.stack = this.stack.filter(sa => sa.requestor.id !== requestor.id);
+            this.removeStackItems(existingUserActions);
         }
 
         const stackAction: StackActionItem = {
@@ -48,9 +50,14 @@ export class StackStore {
         this.stack.push(stackAction);
     }
 
-    @action popStackItem(resolvedItem: StackActionItem): void {
+    @action removeStackItem(stackItem: StackActionItem): void {
 
-        this.stack = this.stack.filter(item => item.id !== resolvedItem.id);
+        this.stack = this.stack.filter(item => item.id !== stackItem.id);
+    }
+
+    @action removeStackItems(stackItems: StackActionItem[]): void {
+
+        each(stackItems, item => this.removeStackItem(item));
     }
 
     @action resolveStack(): void {
@@ -135,6 +142,11 @@ export class StackStore {
 
                 break;
             }
+            case PhaseVerb.CLEAR_EXECUTED_STACK: {
+
+                this.executedStack = [];
+                break;
+            }
             default: return;
         }
     }
@@ -159,7 +171,14 @@ export class StackStore {
             this.executeActionMutation(stackActionItem);
         }
 
-        this.popStackItem(stackActionItem);
+        this.removeLegitStackItem(stackActionItem);
+    }
+
+    private removeLegitStackItem(stackItem: StackActionItem) {
+
+        this.executedStack.push(cloneDeep(stackItem));
+
+        this.removeStackItem(stackItem);
     }
 
     private executeActionQuery(stackItem: StackActionItem) {
@@ -181,7 +200,10 @@ export class StackStore {
                 break;
             }
             case ActionQuery.VISITED_BY: {
-                queryResults = 'NOT IMPLEMENTED - VISITED BY';
+
+                const visitedNames = map(filter(this.executedStack, item => item.target.id === stackItem.target.id), a => a.requestor.name);
+
+                queryResults = `${stackItem.target.name} was visited by: ${visitedNames.join(', ')}`;
                 break;
             }
         }
@@ -212,7 +234,7 @@ export class StackStore {
 
                 if (existingUserActions) {
                     // TODO: Let the target know that they were roleblocked
-                    this.stack = this.stack.filter(sa => sa.requestor.id !== target.id);
+                    this.removeStackItems(existingUserActions);
                     console.log(`${target.name} was roleblocked!`);
                 }
 
@@ -227,7 +249,7 @@ export class StackStore {
 
                 if (killAgainstTarget) {
 
-                    this.stack = this.stack.filter(sa => sa.id !== killAgainstTarget.id);
+                    this.removeStackItem(killAgainstTarget);
 
                     if (roleAction.trigger) {
                         console.log('Protect Action Trigger happened');
@@ -309,14 +331,6 @@ export class StackStore {
 
     private reprioritizeStack(items: StackActionItem[]): StackActionItem[] {
 
-        const lowPriorityActions = filter(items, item => item.action.priorty === PriorityLevel.LOW || isNil(item.action.priorty));
-        const medPriorityActions = filter(items, item => item.action.priorty === PriorityLevel.MEDIUM);
-        const highPriorityActions = filter(items, item => item.action.priorty === PriorityLevel.HIGH);
-
-        return [
-            ...highPriorityActions,
-            ...medPriorityActions,
-            ...lowPriorityActions,
-        ];
+        return reverse(sortBy(items, item => item.action.priorty));
     }
 }

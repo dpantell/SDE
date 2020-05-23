@@ -16,11 +16,15 @@ export interface TargetCollection {
     criteria: TargetCriteria[];
 }
 
-export const ALL_USERS_NOT_SELF: TargetCriteria[] = [
+export const ALL_USERS: TargetCriteria[] = [
     {
         quantifier: Quantifier.ALL,
         alignment: Alignment.ANY
     },
+];
+
+export const ALL_USERS_NOT_SELF: TargetCriteria[] = [
+    ...ALL_USERS,
     {
         quantifier: Quantifier.NOT_SELF,
     },

@@ -18,7 +18,9 @@ export class PhasesService {
                 verb: PhaseVerb.REMOVE_ALL_BOOSTS,
                 quantifier: Quantifier.ALL
             }],
-            endActions: [],
+            endActions: [{
+                verb: PhaseVerb.CLEAR_EXECUTED_STACK
+            }],
             transitions: []
         };
 
@@ -31,7 +33,9 @@ export class PhasesService {
                 verb: PhaseVerb.REMOVE_ALL_BOOSTS,
                 quantifier: Quantifier.ALL
             }],
-            endActions: [],
+            endActions: [{
+                verb: PhaseVerb.CLEAR_EXECUTED_STACK
+            }],
             transitions: []
         };
 
@@ -44,7 +48,9 @@ export class PhasesService {
                 verb: PhaseVerb.REMOVE_ALL_BOOSTS,
                 quantifier: Quantifier.ALL
             }],
-            endActions: [],
+            endActions: [{
+                verb: PhaseVerb.CLEAR_EXECUTED_STACK
+            }],
             transitions: []
         };
 
@@ -57,7 +63,9 @@ export class PhasesService {
                 verb: PhaseVerb.REMOVE_ALL_BOOSTS,
                 quantifier: Quantifier.ALL
             }],
-            endActions: [],
+            endActions: [{
+                verb: PhaseVerb.CLEAR_EXECUTED_STACK
+            }],
             transitions: []
         };
 
@@ -80,6 +88,9 @@ export class PhasesService {
                 {
                     verb: PhaseVerb.RESOLVE_QUEUED_ACTIONS,
                     quantifier: Quantifier.ALL
+                },
+                {
+                    verb: PhaseVerb.CLEAR_EXECUTED_STACK
                 }
             ],
             transitions: []

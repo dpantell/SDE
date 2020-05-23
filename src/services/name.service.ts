@@ -21,7 +21,7 @@ export class NameService {
         let attributes: string[] = ['Hairy', 'Smelly', 'Tall', 'Old', 'Young', 'Energetic',
             'Lazy', 'Helpful', 'Untrustworthy', 'Trustworthy', 'Patient', 'Perceptive', 'Modest',
             'Sincere', 'Ambitious', 'Cheerful', 'Curious', 'Arrogant', 'Cynical', 'Decietful',
-            'Intolerable', 'Pessimistic', 'Optimistic', 'Cowardly', 'Inconsiderate', 'Mean', 'Sexy',
+            'Intolerable', 'Pessimistic', 'Optimistic', 'Cowardly', 'Inconsiderate', 'Mean',
             'Jealous', 'Boring', 'Short', 'Bossy', 'Selfish', 'Stupid', 'Smart', 'Rude', 'Agreeable',
             'Honorable', 'Attractive', 'Bald', 'Magnificant', 'Witty', 'Repulsive', 'Slow', 'Annoying', ''];
 
