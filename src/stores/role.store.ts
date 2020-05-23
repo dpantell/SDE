@@ -44,10 +44,9 @@ export class RoleStore {
             this.getEscortRole(),
             this.getBodyguardRole(), // needs ability limit
             this.getDoctorRole(), // needs ability limit
-            this.getVigilanteRole() // needs ability limit
+            this.getVigilanteRole(), // needs ability limit
+            this.getConsigliereRole()
             /*
-                Consig
-
                 Lookout
                 Veteran
                 Jailor
@@ -294,6 +293,40 @@ export class RoleStore {
             queryImmunity: [],
             mutationImmunity: [],
             attack: CombatPower.BASIC,
+            defense: CombatPower.NONE,
+        };
+    }
+
+    private getConsigliereRole(): Role {
+
+        return {
+            icon: '',
+            name: 'Consigliere',
+            description: '',
+            roleType: RoleType.Invest,
+            alignment: Alignment.EVIL,
+            abilities: [
+                {
+                    phases: {
+                        phaseNames: this.phaseStore.nightPhaseNames,
+                    },
+                    targets: {
+                        logicalOperator: LogicalOperator.OR,
+                        criteria: [
+                            {
+                                quantifier: Quantifier.NONE,
+                                alignment: Alignment.EVIL,
+                            }
+                        ]
+                    },
+                    ability: QUERY_ROLE
+                },
+            ],
+            maxTargets: 1,
+            winConditions: EVIL_WIN_CONDITION_COLLECTION,
+            queryImmunity: [],
+            mutationImmunity: [],
+            attack: CombatPower.NONE,
             defense: CombatPower.NONE,
         };
     }
