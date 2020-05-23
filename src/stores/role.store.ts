@@ -48,16 +48,14 @@ export class RoleStore {
             this.getConsigliereRole(),
             this.getLookoutRole()
             /*
-                Lookout
                 Veteran
-                Jailor
-                Godfather
-
-                Transporter
                 Spy
+                Godfather
+                Transporter
                 Janitor
 
                 Mayor
+                Jailor
                 Medium
             */
         ];

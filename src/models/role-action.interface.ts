@@ -29,7 +29,7 @@ export enum ActionMutation {
 }
 
 export enum PriorityLevel {
-    LOWEST,
+    LOWEST = 0,
     LOW,
     MEDIUM,
     HIGH,
